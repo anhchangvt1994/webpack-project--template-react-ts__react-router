@@ -1,0 +1,8 @@
+{
+	"path": "git-cz",
+	"config": {
+		"git-cz": {
+			"disableEmoji": true
+		}
+	}
+}
