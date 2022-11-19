@@ -19,7 +19,7 @@ module.exports = async (env, arg) => {
 			react: ['react'],
 			reactDom: ['react-dom/client'],
 			app: {
-				import: '/src/index.jsx',
+				import: '/src/index.tsx',
 				dependOn: ['react', 'reactDom'],
 			},
 			...(WebpackConfigWithMode.entry || {}),
@@ -94,6 +94,26 @@ module.exports = async (env, arg) => {
 				filename: '[name].css',
 				chunkFilename: '[id].css',
 				ignoreOrder: false,
+			}),
+			require('unplugin-auto-import/webpack')({
+				// targets to transform
+				include: [
+					/\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+					/\.md$/, // .md
+				],
+				imports: [
+					// presets
+					{
+						react: [['*', 'React'], 'Suspense'],
+					},
+					'react',
+					{
+						'react-dom/client': ['createRoot'],
+					},
+				],
+				eslintrc: {
+					enabled: true, // <-- this
+				},
 			}),
 			...(WebpackConfigWithMode.plugins || []),
 		],

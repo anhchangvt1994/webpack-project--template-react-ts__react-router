@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import useEffectCustomize from 'js/services/use-effect-customize'
 
 function App() {
@@ -15,17 +14,19 @@ function App() {
 
 	return (
 		<div className="app">
-			<header className="app-head">
-				<img
-					className="app-logo"
-					src={require('assets/images/logo.svg')}
-					alt="React Logo"
-				/>
-				<p>{import.meta.env.ROUTER_NAME_HOME_PAGE}</p>
-				<p className="text-purple">
-					Page has been open for <code>{count}</code> seconds.
-				</p>
-			</header>
+			<img
+				className="app-logo"
+				src={require('assets/images/logo.svg')}
+				alt="React Logo"
+				width="256"
+				height="256"
+			/>
+			<p className="text-primary greeting-label">
+				Welcome to {import.meta.env.GENERAL_GREETING}
+			</p>
+			<p className="text-green counter-label">
+				Page has been open for <code>{count}</code> seconds.
+			</p>
 		</div>
 	)
 } // App()

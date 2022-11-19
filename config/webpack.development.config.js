@@ -59,12 +59,6 @@ const WebpackDevelopmentConfiguration = async () => {
 				// 	use: {
 				// 		loader: 'swc-loader',
 				// 		options: {
-				// 			// jsc: {
-				// 			// 	parser: {
-				// 			// 		syntax: 'typescript',
-				// 			// 		decorators: true,
-				// 			// 	},
-				// 			// },
 				// 			jsc: {
 				// 				parser: {
 				// 					syntax: 'typescript',
@@ -101,7 +95,7 @@ const WebpackDevelopmentConfiguration = async () => {
 		plugins: [
 			new ReactRefreshPlugin(),
 			RecompileLoadingScreenInitial,
-			new webpack.PrefetchPlugin('.', '/src/index.jsx'),
+			new webpack.PrefetchPlugin('.', '/src/index.tsx'),
 			new webpack.PrefetchPlugin('.', '/src/App.tsx'),
 			new HtmlWebpackPlugin({
 				title: 'webpack project for react',
@@ -172,6 +166,27 @@ const WebpackDevelopmentConfiguration = async () => {
 			splitChunks: {
 				cacheGroups: {
 					default: false,
+					styles: {
+						// NOTE - For mini-css-extract
+						chunks: 'all',
+						name: 'bundle',
+						type: 'css/mini-extract',
+						priority: 100,
+						minSize: 0,
+						maxSize: 500,
+						minSizeReduction: 500,
+						enforce: true,
+
+						// NOTE - For style-loader
+						// name: 'bundle',
+						// test: /\.((c|sa|sc)ss)$/i,
+						// chunks: 'all',
+						// priority: 100,
+						// enforce: true,
+						// minSize: 0,
+						// maxSize: 500,
+						// minSizeReduction: 500,
+					},
 				},
 			},
 		},
@@ -179,7 +194,6 @@ const WebpackDevelopmentConfiguration = async () => {
 			lazyCompilation: true,
 			cacheUnaffected: true,
 			outputModule: true,
-			syncWebAssembly: true,
 		},
 	}
 }
@@ -270,7 +284,7 @@ class RecompileLoadingScreen {
 				self._stopTimeoutTurnOffProcessing()
 			}
 
-			self._setTimeoutTurnOffProcessingWithDuration(100)
+			self._setTimeoutTurnOffProcessingWithDuration(70)
 		}) // compiler.hooks.done
 	}
 }

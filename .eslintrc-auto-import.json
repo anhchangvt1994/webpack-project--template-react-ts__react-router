@@ -1,0 +1,27 @@
+{
+  "globals": {
+    "React": true,
+    "Suspense": true,
+    "createRef": true,
+    "createRoot": true,
+    "forwardRef": true,
+    "lazy": true,
+    "memo": true,
+    "startTransition": true,
+    "useCallback": true,
+    "useContext": true,
+    "useDebugValue": true,
+    "useDeferredValue": true,
+    "useEffect": true,
+    "useId": true,
+    "useImperativeHandle": true,
+    "useInsertionEffect": true,
+    "useLayoutEffect": true,
+    "useMemo": true,
+    "useReducer": true,
+    "useRef": true,
+    "useState": true,
+    "useSyncExternalStore": true,
+    "useTransition": true
+  }
+}

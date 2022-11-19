@@ -32,6 +32,9 @@
 		// "jsx": "preserve",
 		"jsx": "react",
 
+		// NOTE - Check for auto import
+		// "checkJs": true,
+
 		// NOTE - Setup resolve alias path for project (use case is for auto complete sugestion)
 		"paths": {
 			"@/*": ["*"],
@@ -65,6 +68,7 @@
 		"importsNotUsedAsValues": "error",
 		"importHelpers": true,
 		"sourceMap": true
+		// "types": ["webpack-env", "react"]
 	},
 	"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 }

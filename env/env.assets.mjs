@@ -1,6 +1,4 @@
 export default {
-  image: {
-    host: "test",
-    version: "test",
-  },
-};
+	prefix: 'assets',
+	data: {},
+}

@@ -1,12 +1,8 @@
 import 'assets/styles/tailwind.css'
 import 'assets/styles/app.scss'
-import React, { Suspense } from 'react'
-import { createRoot } from 'react-dom/client'
-// import App from 'js/App.tsx'
 
 const root = createRoot(document.getElementById('root'))
-
-const App = React.lazy(() => import('js/App.tsx'))
+const App = React.lazy(() => import('js/App'))
 
 root.render(
 	<Suspense>

@@ -2,6 +2,7 @@
 	"root": true,
 	"ignorePatterns": ["webpack.config.js", "env/**/*", "config/**/*"],
 	"extends": [
+		".eslintrc-auto-import.json",
 		"airbnb-typescript",
 		"airbnb/hooks",
 		"plugin:@typescript-eslint/recommended",

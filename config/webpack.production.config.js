@@ -29,7 +29,6 @@ module.exports = (async () => {
 								'@babel/preset-typescript',
 							],
 							plugins: [
-								'@loadable/babel-plugin',
 								['@babel/plugin-proposal-class-properties', { loose: false }],
 							],
 						},
@@ -61,6 +60,7 @@ module.exports = (async () => {
 		],
 		cache: {
 			type: 'filesystem',
+			compression: 'gzip',
 		},
 		performance: {
 			maxEntrypointSize: 512000,
@@ -68,20 +68,30 @@ module.exports = (async () => {
 		},
 		optimization: {
 			moduleIds: 'deterministic',
+			runtimeChunk: 'single',
 			runtimeChunk: {
-				name: (entrypoint) => `runtimechunk~${entrypoint.name}`,
+				name: (entrypoint) => `runtimechunk_${entrypoint.name}`,
 			},
 			splitChunks: {
 				chunks: 'all',
-				minSize: 100000,
-				maxSize: 250000,
+				minSize: 5000,
+				maxSize: 100000,
 
 				cacheGroups: {
 					vendor: {
-						name: '[hash]',
+						name: 'vendors',
 						reuseExistingChunk: true,
 						test: /[\\/]node_modules[\\/]/,
-						chunks: 'all',
+						minSizeReduction: 100000,
+					},
+					styles: {
+						name: 'bundle',
+						type: 'css/mini-extract',
+						priority: 100,
+						minSize: 1000,
+						maxSize: 50000,
+						minSizeReduction: 50000,
+						enforce: true,
 					},
 				},
 			},
@@ -89,6 +99,19 @@ module.exports = (async () => {
 			minimize: true,
 			minimizer: [
 				new TerserPlugin({
+					parallel: true,
+					terserOptions: {
+						format: {
+							comments: false, // It will drop all the console.log statements from the final production build
+						},
+						compress: {
+							drop_console: true, // It will stop showing any console.log statement in dev tools. Make it false if you want to see consoles in production mode.
+						},
+					},
+					extractComments: false,
+				}),
+				new CssMinimizerPlugin({
+					exclude: /node_modules/,
 					parallel: true,
 				}),
 			],

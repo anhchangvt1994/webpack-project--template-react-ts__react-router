@@ -10,9 +10,7 @@ interface Env {
     IPV4_ADDRESS:          string;
     IPV4_HOST:             string;
     IO_HOST:               string;
-    PROJECT_VERSION:       string;
     ROUTER_NAME_HOME_PAGE: string;
     ROUTER_PATH_HOME_PAGE: string;
-    IMAGE_HOST:            string;
-    IMAGE_VERSION:         string;
+    GENERAL_GREETING:      string;
 }
