@@ -1,6 +1,6 @@
 export default {
 	prefix: 'general',
 	data: {
-		greeting: 'React',
+		greeting: 'React 18',
 	},
 }

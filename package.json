@@ -4,9 +4,9 @@
 		"**/*.scss"
 	],
 	"scripts": {
-		"dev": "ENV=development PORT=3000 IO_PORT=3030 webpack serve --mode=development",
+		"dev": "cross-env ENV=development PORT=3000 IO_PORT=3030 webpack serve --mode=development",
 		"prod": "webpack --mode=production",
-		"serve": "PORT=8080 NODE_NO_WARNINGS=1 node ./config/webpack.serve.config.js",
+		"serve": "cross-env PORT=8080 NODE_NO_WARNINGS=1 node ./config/webpack.serve.config.js",
 		"prettier": "tsc --noEmit && prettier src/**/*.{t,j}s{,x} --no-error-on-unmatched-pattern --check",
 		"lint": "tsc --noEmit && eslint src/**/*.{t,j}s{,x} --no-error-on-unmatched-pattern --ignore-pattern node_modules/",
 		"lint:fix": "npm run lint -- --fix",
@@ -38,6 +38,7 @@
 		"commitizen": "^4.2.5",
 		"commitlint": "^17.2.0",
 		"core-js": "^3.26.1",
+		"cross-env": "^7.0.3",
 		"css-loader": "^6.7.1",
 		"css-minimizer-webpack-plugin": "^4.2.2",
 		"esbuild-loader": "^2.20.0",
