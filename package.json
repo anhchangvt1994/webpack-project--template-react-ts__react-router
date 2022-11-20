@@ -64,6 +64,7 @@
 		"postcss-preset-env": "^7.8.2",
 		"prettier": "^2.7.1",
 		"quicktype-core": "^6.0.62",
+		"react-refresh": "^0.14.0",
 		"sass": "^1.56.1",
 		"sass-loader": "^13.2.0",
 		"socket.io": "^4.5.3",
