@@ -2,6 +2,7 @@
 const path = require('path')
 const fs = require('fs')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 const PROJECT_PATH = __dirname.replace(/\\/g, '/')
 
@@ -16,21 +17,23 @@ module.exports = async (env, arg) => {
 		mode: WebpackConfigWithMode.mode || arg.mode || 'production',
 		context: path.resolve(__dirname, '.'),
 		entry: {
-			react: ['react'],
-			reactDom: ['react-dom/client'],
 			app: {
 				import: '/src/index.tsx',
-				dependOn: ['react', 'reactDom'],
 			},
 			...(WebpackConfigWithMode.entry || {}),
 		},
 		output: {
 			globalObject: 'window',
+			filename: '[contenthash:8].js',
 			assetModuleFilename:
-				arg.mode === 'production' ? '[hash][ext]' : 'assets/[name][ext]',
-			clean: true,
+				arg.mode === 'production'
+					? '[contenthash:8][ext]'
+					: 'assets/[contenthash:8][ext]',
+			path: path.resolve(__dirname, 'dist'),
 			...(WebpackConfigWithMode.output || {}),
 		},
+		externalsType: WebpackConfigWithMode.externalsType || 'global',
+		externals: WebpackConfigWithMode.externals || {},
 		resolve: {
 			alias: {
 				...(resolveTsconfigPathsToAlias(
@@ -83,16 +86,22 @@ module.exports = async (env, arg) => {
 					],
 				},
 				{
-					test: /\.(png|jpe?g|gif|webm|mp4|svg)$/i,
+					test: /\.(png|jpe?g|gif|webm|mp4|svg|ico|tff|eot|otf|woff|woff2)$/,
 					type: 'asset/resource',
+					exclude: [/node_modules/],
 				},
 				...(WebpackConfigWithMode?.module?.rules ?? []),
 			],
 		},
 		plugins: [
+			new CleanWebpackPlugin(),
 			new MiniCssExtractPlugin({
-				filename: '[name].css',
-				chunkFilename: '[id].css',
+				filename:
+					arg.mode === 'development'
+						? '[id].css'
+						: '[name].[contenthash:8].css',
+				chunkFilename:
+					arg.mode === 'development' ? '[id].css' : '[id].[contenthash:8].css',
 				ignoreOrder: false,
 			}),
 			require('unplugin-auto-import/webpack')({
@@ -112,7 +121,7 @@ module.exports = async (env, arg) => {
 					},
 				],
 				eslintrc: {
-					enabled: true, // <-- this
+					enabled: true,
 				},
 			}),
 			...(WebpackConfigWithMode.plugins || []),
@@ -120,8 +129,6 @@ module.exports = async (env, arg) => {
 		cache: WebpackConfigWithMode.cache || true,
 		optimization: WebpackConfigWithMode.optimization || {},
 		experiments: WebpackConfigWithMode.experiments || {},
-		externalsType: WebpackConfigWithMode.externalsType || 'global',
-		externals: WebpackConfigWithMode.externals || {},
 		target: WebpackConfigWithMode.target || 'web',
 		node: WebpackConfigWithMode.node || {},
 	}

@@ -8,6 +8,28 @@ module.exports = (async () => {
 
 	return {
 		mode: 'production',
+		output: {
+			publicPath: '/',
+			...(process.env.ESM
+				? {
+						module: true,
+						// library: { type: 'module' },
+						environment: {
+							// module: true,
+							dynamicImport: true,
+						},
+				  }
+				: {}),
+		},
+		...(process.env.ESM
+			? {
+					// externalsType: 'module',
+					externals: {
+						react: 'module https://esm.sh/react@18.2.0',
+						'react-dom': 'module https://esm.sh/react-dom@18.2.0',
+					},
+			  }
+			: {}),
 		module: {
 			rules: [
 				{
@@ -35,6 +57,7 @@ module.exports = (async () => {
 					},
 				},
 			],
+			noParse: /react|react-dom/,
 		},
 		plugins: [
 			new HtmlWebpackPlugin({
@@ -45,6 +68,7 @@ module.exports = (async () => {
 					env: process.env.ENV,
 					ioHost: JSON.stringify(process.env.IO_HOST),
 				},
+				scriptLoading: process.env.ESM ? 'module' : 'defer',
 				minify: {
 					collapseWhitespace: true,
 					removeComments: true,
@@ -69,9 +93,6 @@ module.exports = (async () => {
 		optimization: {
 			moduleIds: 'deterministic',
 			runtimeChunk: 'single',
-			runtimeChunk: {
-				name: (entrypoint) => `runtimechunk_${entrypoint.name}`,
-			},
 			splitChunks: {
 				chunks: 'all',
 				minSize: 5000,
@@ -85,21 +106,27 @@ module.exports = (async () => {
 						minSizeReduction: 100000,
 					},
 					styles: {
-						name: 'bundle',
 						type: 'css/mini-extract',
+						filename: '[contenthash:8].css',
 						priority: 100,
 						minSize: 1000,
 						maxSize: 50000,
 						minSizeReduction: 50000,
 						enforce: true,
 					},
+					react: {
+						test: /react/,
+						filename: '[chunkhash:8].js',
+						chunks: 'all',
+						enforce: true,
+					}, // react
 				},
 			},
 
 			minimize: true,
 			minimizer: [
 				new TerserPlugin({
-					parallel: true,
+					parallel: 4,
 					terserOptions: {
 						format: {
 							comments: false, // It will drop all the console.log statements from the final production build
@@ -110,11 +137,28 @@ module.exports = (async () => {
 					},
 					extractComments: false,
 				}),
+				// new ESBuildMinifyPlugin({
+				// 	target: 'es2015',
+				// }),
 				new CssMinimizerPlugin({
 					exclude: /node_modules/,
-					parallel: true,
+					parallel: 4,
+
+					minify: [
+						CssMinimizerPlugin.esbuildMinify,
+						CssMinimizerPlugin.cssnanoMinify,
+						CssMinimizerPlugin.cssoMinify,
+						CssMinimizerPlugin.cleanCssMinify,
+					],
 				}),
 			],
-		},
+		}, // optimization
+		...(process.env.ESM
+			? {
+					experiments: {
+						outputModule: true,
+					},
+			  }
+			: {}),
 	}
 })()

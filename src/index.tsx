@@ -10,7 +10,4 @@ root.render(
 	</Suspense>
 )
 
-// NOTE - Must have that code for Hot module reload + install @pmmmwh/react-refresh-webpack-plugin
-if (module.hot) {
-	module.hot.accept()
-}
+console.log('run')

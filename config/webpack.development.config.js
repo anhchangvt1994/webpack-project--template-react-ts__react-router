@@ -38,17 +38,33 @@ const WebpackDevelopmentConfiguration = async () => {
 		output: {
 			publicPath: '/',
 			module: true,
+			// library: { type: 'module' },
+			environment: {
+				dynamicImport: true,
+			},
+			scriptType: 'module',
 		},
-		devtool: 'inline-source-map',
+		externals: {
+			react: 'module https://esm.sh/react@18.2.0?dev',
+			'react-dom': 'module https://esm.sh/react-dom@18.2.0?dev',
+		},
+		devtool: 'inline-source-map', // NOTE - BAD Performance, GOOD debugging
+		// devtool: 'eval-cheap-module-source-map', // NOTE - SLOW Performance, GOOD debugging
+		// devtool: 'eval', // NOTE - GOOD Performance, BAD debugging
+		// devtool: 'eval-cheap-source-map',
 		devServer: {
 			compress: true,
 			port,
 			static: './dist',
-			watchFiles: ['src/**/*', 'index.html'],
+			watchFiles: ['src/**/*', 'config/index.html'],
 			hot: true,
 			liveReload: false,
 			host: process.env.PROJECT_IPV4_HOST,
-			devMiddleware: { writeToDisk: true },
+			client: { overlay: false }, // NOTE - Use overlay of react refresh plugin
+			devMiddleware: {
+				publicPath: '/',
+				writeToDisk: true,
+			},
 		},
 		module: {
 			rules: [
@@ -91,23 +107,23 @@ const WebpackDevelopmentConfiguration = async () => {
 					},
 				},
 			],
+			noParse: /react|react-dom/,
 		},
 		plugins: [
-			new ReactRefreshPlugin(),
-			RecompileLoadingScreenInitial,
-			new webpack.PrefetchPlugin('.', '/src/index.tsx'),
-			new webpack.PrefetchPlugin('.', '/src/App.tsx'),
 			new HtmlWebpackPlugin({
 				title: 'webpack project for react',
-				template: 'index.html',
+				template: 'config/index.html',
 				inject: 'body',
 				templateParameters: {
 					env: process.env.ENV,
 					ioHost: JSON.stringify(process.env.IO_HOST),
 				},
+				scriptLoading: 'module',
 				// NOTE - Tell HtmlWebpackPlugin does not auto insert these files
 				// excludeChunks: ["socket.io-client"],
 			}),
+			RecompileLoadingScreenInitial,
+			new ReactRefreshPlugin(),
 			new WebpackCustomizeDefinePlugin({
 				'import.meta.env': WebpackCustomizeDefinePlugin.RuntimeUpdateValue(
 					() => {
@@ -152,11 +168,17 @@ const WebpackDevelopmentConfiguration = async () => {
 
 				_socket.emit('updateProgressPercentage', Math.ceil(percentage * 100))
 			}),
-		],
+		].filter(Boolean),
 
 		cache: {
-			type: 'filesystem',
-			compression: 'gzip',
+			// NOTE - Type memory
+			type: 'memory',
+			cacheUnaffected: true,
+			maxGenerations: Infinity,
+
+			// NOTE - Type filesystem
+			// type: 'filesystem',
+			// compression: 'gzip',
 		},
 
 		// NOTE - We need get single runtime chunk to ignore issue hot module replacement does not work after changing a file
@@ -168,17 +190,17 @@ const WebpackDevelopmentConfiguration = async () => {
 					default: false,
 					styles: {
 						// NOTE - For mini-css-extract
-						chunks: 'all',
-						name: 'bundle',
-						type: 'css/mini-extract',
-						priority: 100,
-						minSize: 0,
-						maxSize: 500,
-						minSizeReduction: 500,
-						enforce: true,
-
+						// chunks: 'all',
+						// type: 'css/mini-extract',
+						// priority: 100,
+						// minChunks: 1,
+						// minSize: 0,
+						// maxSize: 500,
+						// minSizeReduction: 500,
+						// enforce: true,
 						// NOTE - For style-loader
 						// name: 'bundle',
+						// filename: '[contenthash].js',
 						// test: /\.((c|sa|sc)ss)$/i,
 						// chunks: 'all',
 						// priority: 100,
@@ -186,8 +208,14 @@ const WebpackDevelopmentConfiguration = async () => {
 						// minSize: 0,
 						// maxSize: 500,
 						// minSizeReduction: 500,
-					},
-				},
+					}, // styles
+					react: {
+						test: /react/,
+						filename: '[chunkhash:8].js',
+						chunks: 'all',
+						enforce: true,
+					}, // react
+				}, // cacheGroups
 			},
 		},
 		experiments: {
