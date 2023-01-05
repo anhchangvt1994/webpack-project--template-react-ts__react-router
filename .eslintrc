@@ -49,10 +49,10 @@
 			"eslint-import-resolver-custom-alias": {
 				"alias": {
 					"@": "./",
-					"js": "./src",
-					"assets": "./assets"
+					"src": "./src",
+					"assets": "./src/assets"
 				},
-				"extensions": [".js", ".jsx", ".vue", ".ts", ".tsx"]
+				"extensions": [".js", ".jsx", ".ts", ".tsx"]
 			}
 		}
 	}

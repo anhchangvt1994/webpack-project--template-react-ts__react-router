@@ -35,6 +35,7 @@ module.exports = async (env, arg) => {
 		externalsType: WebpackConfigWithMode.externalsType || 'global',
 		externals: WebpackConfigWithMode.externals || {},
 		resolve: {
+			preferRelative: true,
 			alias: {
 				...(resolveTsconfigPathsToAlias(
 					path.resolve(PROJECT_PATH, 'tsconfig.json')

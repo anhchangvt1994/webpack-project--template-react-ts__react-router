@@ -61,6 +61,7 @@ const WebpackDevelopmentConfiguration = async () => {
 			liveReload: false,
 			host: process.env.PROJECT_IPV4_HOST,
 			client: { overlay: false }, // NOTE - Use overlay of react refresh plugin
+			historyApiFallback: true,
 			devMiddleware: {
 				publicPath: '/',
 				writeToDisk: true,
@@ -172,13 +173,13 @@ const WebpackDevelopmentConfiguration = async () => {
 
 		cache: {
 			// NOTE - Type memory
-			type: 'memory',
-			cacheUnaffected: true,
-			maxGenerations: Infinity,
+			// type: 'memory',
+			// cacheUnaffected: true,
+			// maxGenerations: Infinity,
 
 			// NOTE - Type filesystem
-			// type: 'filesystem',
-			// compression: 'gzip',
+			type: 'filesystem',
+			compression: 'gzip',
 		},
 
 		// NOTE - We need get single runtime chunk to ignore issue hot module replacement does not work after changing a file

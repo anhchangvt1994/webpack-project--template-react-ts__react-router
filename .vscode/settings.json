@@ -1,3 +1,14 @@
 {
-    "nuxt.isNuxtApp": false
+	"nuxt.isNuxtApp": false,
+
+	"path-autocomplete.extensionOnImport": true,
+	"path-autocomplete.includeExtension": true,
+	"path-autocomplete.excludedItems": {
+		"**": { "when": "**/*.{js,jsx,ts,tsx}", "isDir": true }
+	},
+	"path-autocomplete.pathMappings": {
+		"images": "${workspace}/src/assets/images"
+	},
+	"path-autocomplete.pathSeparators": " \t({[",
+	"editor.suggest.showModules": false
 }

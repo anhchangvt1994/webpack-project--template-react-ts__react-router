@@ -10,6 +10,7 @@ const serverInitial = new WebpackDevServer(
 	{
 		compress: true,
 		static: './dist',
+    historyApiFallback: true,
 	}
 )
 

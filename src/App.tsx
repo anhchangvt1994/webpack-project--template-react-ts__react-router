@@ -1,4 +1,4 @@
-import useEffectCustomize from 'js/services/use-effect-customize'
+import useEffectCustomize from 'src/utils/use-effect-customize'
 
 function App() {
 	const [count, setCount] = useState(0)
