@@ -4,11 +4,17 @@
 	"path-autocomplete.extensionOnImport": true,
 	"path-autocomplete.includeExtension": true,
 	"path-autocomplete.excludedItems": {
-		"**": { "when": "**/*.{js,jsx,ts,tsx}", "isDir": true }
+		"**": { "when": "**/*.{js,ts,jsx,tsx}", "isDir": true }
 	},
 	"path-autocomplete.pathMappings": {
-		"images": "${workspace}/src/assets/images"
+		"images": "${workspace}/src/assets/images",
+		"assets": "${workspace}/src/assets"
 	},
 	"path-autocomplete.pathSeparators": " \t({[",
-	"editor.suggest.showModules": false
+	"editor.suggest.showModules": false,
+	"editor.codeActionsOnSave": [
+		"source.formatDocument",
+		"source.fixAll.tslint",
+		"source.fixAll.eslint"
+	]
 }

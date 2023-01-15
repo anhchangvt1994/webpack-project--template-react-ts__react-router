@@ -104,6 +104,7 @@ module.exports = async (env, arg) => {
 				chunkFilename:
 					arg.mode === 'development' ? '[id].css' : '[id].[contenthash:8].css',
 				ignoreOrder: false,
+				experimentalUseImportModule: true,
 			}),
 			require('unplugin-auto-import/webpack')({
 				// targets to transform
@@ -113,12 +114,36 @@ module.exports = async (env, arg) => {
 				],
 				imports: [
 					// presets
-					{
-						react: [['*', 'React'], 'Suspense'],
-					},
 					'react',
 					{
+						react: [
+							['*', 'React'],
+							'Suspense',
+							'componentDidCatch',
+							'StrictMode',
+							'createContext',
+						],
+					},
+					{
 						'react-dom/client': ['createRoot'],
+					},
+					'react-router-dom',
+					{
+						'react-router-dom': [
+							'createBrowserRouter',
+							'RouterProvider',
+							'BrowserRouter',
+						],
+					},
+					{
+						'styled-components': [
+							['default', 'styled'],
+							'createGlobalStyle',
+							'keyframes',
+						],
+					},
+					{
+						polished: ['rgba'],
 					},
 				],
 				eslintrc: {

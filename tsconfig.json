@@ -36,7 +36,11 @@
 		"paths": {
 			"@/*": ["../*"],
 			"src/*": ["*"],
-			"assets/*": ["assets/*"]
+			"assets/*": ["assets/*"],
+			"config/*": ["config/*"],
+			"pages/*": ["pages/*"],
+			"components/*": ["components/*"],
+			"utils/*": ["utils/*"]
 		},
 
 		// NOTE - Tell typescript compile just only check type
@@ -79,8 +83,7 @@
 		"allowSyntheticDefaultImports": true,
 		"importsNotUsedAsValues": "error",
 		"importHelpers": true,
-		"sourceMap": true,
-		"isolatedModules": true
+		"sourceMap": true
 		// "types": ["webpack-env", "react"]
 	},
 	"lib": ["esnext", "dom", "dom.iterable", "scripthost"]

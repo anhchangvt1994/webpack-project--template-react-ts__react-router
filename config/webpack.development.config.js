@@ -47,6 +47,9 @@ const WebpackDevelopmentConfiguration = async () => {
 		externals: {
 			react: 'module https://esm.sh/react@18.2.0?dev',
 			'react-dom': 'module https://esm.sh/react-dom@18.2.0?dev',
+			'react-router-dom': 'module https://esm.sh/react-router-dom@6.6.2?dev',
+			'styled-components': 'module https://esm.sh/styled-components@5.3.6?dev',
+			polished: 'module https://esm.sh/polished@4.2.2?dev',
 		},
 		devtool: 'inline-source-map', // NOTE - BAD Performance, GOOD debugging
 		// devtool: 'eval-cheap-module-source-map', // NOTE - SLOW Performance, GOOD debugging
@@ -66,6 +69,18 @@ const WebpackDevelopmentConfiguration = async () => {
 				publicPath: '/',
 				writeToDisk: true,
 			},
+			// onBeforeSetupMiddleware: function (devServer) {
+			// 	if (!devServer) {
+			// 		throw new Error('webpack-dev-server is not defined')
+			// 	}
+
+			// 	devServer.app.get(
+			// 		'/src_pages_HomePage_tsx.5d1e03d3.js',
+			// 		function (req, res, next) {
+			// 			res.status(404).send('Not found')
+			// 		}
+			// 	)
+			// },
 		},
 		module: {
 			rules: [
@@ -108,7 +123,6 @@ const WebpackDevelopmentConfiguration = async () => {
 					},
 				},
 			],
-			noParse: /react|react-dom/,
 		},
 		plugins: [
 			new HtmlWebpackPlugin({
@@ -173,13 +187,13 @@ const WebpackDevelopmentConfiguration = async () => {
 
 		cache: {
 			// NOTE - Type memory
-			// type: 'memory',
-			// cacheUnaffected: true,
-			// maxGenerations: Infinity,
+			type: 'memory',
+			cacheUnaffected: true,
+			maxGenerations: Infinity,
 
 			// NOTE - Type filesystem
-			type: 'filesystem',
-			compression: 'gzip',
+			// type: 'filesystem',
+			// compression: 'gzip',
 		},
 
 		// NOTE - We need get single runtime chunk to ignore issue hot module replacement does not work after changing a file
@@ -210,12 +224,42 @@ const WebpackDevelopmentConfiguration = async () => {
 						// maxSize: 500,
 						// minSizeReduction: 500,
 					}, // styles
-					react: {
-						test: /react/,
-						filename: '[chunkhash:8].js',
+					vendors: {
 						chunks: 'all',
+						test: /[\\/]node_modules[\\/]/,
+						name: 'vendors',
+						reuseExistingChunk: true,
+						// minSize: 30000,
+						// maxSize: 200000,
 						enforce: true,
-					}, // react
+					},
+					utils: {
+						chunks: 'async',
+						test: /[\\/]utils[\\/]/,
+						name: 'utils',
+						reuseExistingChunk: true,
+						minSize: 10000,
+						maxSize: 100000,
+						// enforce: true,
+					},
+					config: {
+						chunks: 'async',
+						test: /[\\/]config[\\/]/,
+						name: 'config',
+						reuseExistingChunk: true,
+						minSize: 10000,
+						maxSize: 100000,
+						// enforce: true,
+					},
+					components: {
+						chunks: 'async',
+						test: /[\\/]components[\\/]/,
+						name: 'components',
+						reuseExistingChunk: true,
+						minSize: 10000,
+						maxSize: 100000,
+						// enforce: true,
+					},
 				}, // cacheGroups
 			},
 		},
