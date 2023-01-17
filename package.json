@@ -1,8 +1,4 @@
 {
-	"sideEffects": [
-		"**/*.css",
-		"**/*.scss"
-	],
 	"scripts": {
 		"dev": "cross-env ENV=development PORT=3000 IO_PORT=3030 webpack serve --mode=development",
 		"prod": "webpack --mode=production",
@@ -43,6 +39,7 @@
 		"cross-env": "^7.0.3",
 		"css-loader": "^6.7.1",
 		"css-minimizer-webpack-plugin": "^4.2.2",
+		"cz-git": "^1.4.1",
 		"esbuild-loader": "^2.20.0",
 		"eslint": "^8.27.0",
 		"eslint-config-airbnb": "^19.0.4",
@@ -54,8 +51,6 @@
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-react": "^7.31.10",
 		"eslint-plugin-react-hooks": "^4.6.0",
-		"eslint-plugin-styled-components-a11y": "^0.1.0",
-		"git-cz": "^4.9.0",
 		"html-webpack-plugin": "^5.5.0",
 		"husky": "^8.0.2",
 		"isomorphic-fetch": "^3.0.0",
@@ -85,5 +80,42 @@
 		"react-dom": "^18.2.0",
 		"react-router-dom": "^6.6.1",
 		"styled-components": "^5.3.6"
+	},
+	"eslintConfig": {
+		"extends": [
+			"config/eslint.config.js"
+		]
+	},
+	"prettier": "./config/prettier.config.js",
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": "npm run prettier && npm run lint"
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		],
+		"rules": {
+			"type-enum": [
+				2,
+				"always",
+				[
+					"feat",
+					"style",
+					"test",
+					"fix",
+					"docs",
+					"release",
+					"update",
+					"perf",
+					"chore"
+				]
+			]
+		}
+	},
+	"config": {
+		"commitizen": {
+			"path": "cz-git",
+			"czConfig": "./config/cz.config.js"
+		}
 	}
 }

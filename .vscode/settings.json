@@ -3,6 +3,8 @@
 
 	"path-autocomplete.extensionOnImport": true,
 	"path-autocomplete.includeExtension": true,
+	"path-autocomplete.disableUpOneFolder": false,
+	"path-autocomplete.enableFolderTrailingSlash": false,
 	"path-autocomplete.excludedItems": {
 		"**": { "when": "**/*.{js,ts,jsx,tsx}", "isDir": true }
 	},

@@ -70,7 +70,7 @@ module.exports = (async () => {
 			}),
 			new HtmlWebpackPlugin({
 				title: 'webpack project for react',
-				template: 'index.html',
+				template: 'index.production.html',
 				inject: 'body',
 				templateParameters: {
 					env: process.env.ENV,

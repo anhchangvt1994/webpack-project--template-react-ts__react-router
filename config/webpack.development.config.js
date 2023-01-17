@@ -127,7 +127,7 @@ const WebpackDevelopmentConfiguration = async () => {
 		plugins: [
 			new HtmlWebpackPlugin({
 				title: 'webpack project for react',
-				template: 'config/index.html',
+				template: 'index.development.html',
 				inject: 'body',
 				templateParameters: {
 					env: process.env.ENV,

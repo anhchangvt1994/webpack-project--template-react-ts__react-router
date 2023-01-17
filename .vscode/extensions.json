@@ -1,3 +1,3 @@
-// {
-// 	"unwantedRecommendations": ["Vue.volar", "Vue.vscode-typescript-vue-plugin"]
-// }
+{
+	"recommendations": ["TabNine.tabnine-vscode", "ionutvmi.path-autocomplete"]
+}
