@@ -1,12 +1,12 @@
 export default class ErrorBoundary extends React.Component<{
 	children?: any
 	fallback?: any
-	onError?: Function
+	onError?: (error: any) => void
 	timeout?: number
 }> {
 	state = { hasError: false }
 
-	static getDerivedStateFromError(error) {
+	static getDerivedStateFromError() {
 		// Update state so the next render will show the fallback UI.
 		return { hasError: true }
 	}

@@ -1,5 +1,5 @@
-import { useRotueInfo } from 'src/config/router/context/InfoContext'
-import LoadingBoundary from 'src/utils/LoadingBoundary'
+import { useRotueInfo } from 'config/router/context/InfoContext'
+import LoadingBoundary from 'utils/LoadingBoundary'
 import CommentLoader from 'components/comment-page/CommentLoader'
 
 const Section = styled.section`

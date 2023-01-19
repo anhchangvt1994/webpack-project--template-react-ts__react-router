@@ -35,7 +35,6 @@
 		// NOTE - Setup resolve alias path for project (use case is for auto complete sugestion)
 		"paths": {
 			"@/*": ["../*"],
-			"src/*": ["*"],
 			"assets/*": ["assets/*"],
 			"config/*": ["config/*"],
 			"pages/*": ["pages/*"],

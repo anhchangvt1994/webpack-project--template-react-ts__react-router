@@ -5,9 +5,8 @@ module.exports = {
 		'.eslintrc-auto-import.json',
 		'airbnb-typescript',
 		'airbnb/hooks',
-		'plugin:styled-components-a11y/recommended',
 		'plugin:@typescript-eslint/recommended',
-		'plugin:jest/recommended',
+		// 'plugin:jest/recommended',
 		'plugin:prettier/recommended',
 		'eslint:recommended',
 		'plugin:import/recommended',
@@ -16,15 +15,17 @@ module.exports = {
 		'plugin:import/warnings',
 		'prettier',
 	],
-	plugins: ['react', '@typescript-eslint', 'styled-components-a11y'],
+	plugins: ['react', '@typescript-eslint'],
 	env: {
 		browser: true,
 		es6: true,
-		jest: true,
+		node: true,
+		// jest: true,
 	},
 	globals: {
 		Atomics: 'readonly',
 		SharedArrayBuffer: 'readonly',
+		NodeJS: true,
 	},
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -44,18 +45,18 @@ module.exports = {
 				endOfLine: 'auto',
 			},
 		],
+		'@typescript-eslint/naming-convention': 'off',
+		'no-unused-vars': 'warn',
+		'react-hooks/rules-of-hooks': 'warn',
+		'react-hooks/exhaustive-deps': 'warn',
+		// NOTE - This options settup for stop linting alias
+		// "import/no-unresolved": [0, { }]
 	},
 	settings: {
 		'import/resolver': {
 			'eslint-import-resolver-custom-alias': {
 				alias: {
-					'@': './',
-					js: './src',
-					assets: './src/assets',
-					pages: './src/pages',
-					components: './src/components',
-					config: './src/config',
-					utils: './src/utils',
+					'': './src',
 				},
 				extensions: ['.js', '.jsx', '.ts', '.tsx'],
 			},

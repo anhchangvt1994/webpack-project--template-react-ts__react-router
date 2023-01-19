@@ -1,5 +1,5 @@
 import ImageItem, { Outer as ImageOuter } from 'components/ImageItem'
-import { Suspender } from 'src/utils/Suspender'
+import { Suspender } from 'utils/Suspender'
 
 const Row = styled.div`
 	display: flex;

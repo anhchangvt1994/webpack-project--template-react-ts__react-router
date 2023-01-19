@@ -1,6 +1,6 @@
-import ModuleContentSection from 'src/components/content-page/ModuleContentSection'
-import CommentSection from 'src/components/comment-page/CommentSection'
-import { useParamsAdvance } from 'src/config/router/context/InfoContext'
+import ModuleContentSection from 'components/content-page/ModuleContentSection'
+import CommentSection from 'components/comment-page/CommentSection'
+import { useParamsAdvance } from 'config/router/context/InfoContext'
 import { generatePath } from 'react-router-dom'
 
 // NOTE - Dummy Data Region

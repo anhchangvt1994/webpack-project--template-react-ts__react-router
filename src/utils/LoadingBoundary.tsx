@@ -1,17 +1,17 @@
-import type { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode, MutableRefObject } from 'react'
 
-function withDelay(delay: number, fallback: ReactNode): ReactNode {
+function useWithDelay(delay: number, fallback: ReactNode): ReactNode {
 	const [isShow, setIsShow] = useState(delay === 0 ? true : false)
 
-	let timeout: NodeJS.Timeout | null = null
+	const timeout: MutableRefObject<NodeJS.Timeout | null> = useRef(null)
 
 	useEffect(() => {
 		if (!isShow) {
-			timeout = setTimeout(function () {
+			timeout.current = setTimeout(function () {
 				setIsShow(true)
 			}, delay)
 		}
-	}, [])
+	}, [delay, isShow])
 
 	return isShow ? fallback : ''
 }
@@ -27,7 +27,7 @@ export default function LoadingBoundary({
 }): ReactElement {
 	const delayTime: number = Number(delay) || 0
 
-	const Component: ReactNode = withDelay(delayTime, fallback)
+	const Component: ReactNode = useWithDelay(delayTime, fallback)
 
 	return <Suspense fallback={Component}>{children}</Suspense>
 } // LoadingBoundary

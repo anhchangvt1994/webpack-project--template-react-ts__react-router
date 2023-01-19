@@ -1,3 +1,7 @@
 {
-	"recommendations": ["TabNine.tabnine-vscode", "ionutvmi.path-autocomplete"]
+	"recommendations": [
+		"TabNine.tabnine-vscode",
+		"ionutvmi.path-autocomplete",
+		"rohit-gohri.format-code-action"
+	]
 }

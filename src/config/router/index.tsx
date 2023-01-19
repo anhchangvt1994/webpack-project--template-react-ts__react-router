@@ -1,5 +1,5 @@
-import { RouteObject, useMatches } from 'react-router-dom'
-import type { Params, To } from 'react-router'
+import { useMatches } from 'react-router-dom'
+import type { RouteObject, Params, To } from 'react-router'
 import type { IValidation } from 'config/router/context/ValidationContext'
 import {
 	INavigateInfo,
@@ -8,10 +8,10 @@ import {
 	RouteInfoContext,
 	useNavigateInfo,
 	useRouteInit,
-} from 'src/config/router/context/InfoContext'
-import { RouteInitContext } from 'src/config/router/context/InfoContext'
-import Layout from 'src/Layout'
-import NotFoundPage from 'src/pages/NotFoundPage'
+	RouteInitContext,
+} from 'config/router/context/InfoContext'
+import Layout from 'Layout'
+import NotFoundPage from 'pages/NotFoundPage'
 
 function withLazy(
 	f: () => Promise<{
@@ -23,14 +23,19 @@ function withLazy(
 			const Component = lazy(f)
 			return <Component />
 		} else {
-			throw 'The param of withLazy function must be a Function return a Promise or a Dynamic Import that give a React.ComponentType'
+			throw Object.assign(
+				new Error(
+					'The param of withLazy function must be a Function return a Promise or a Dynamic Import that give a React.ComponentType'
+				),
+				{ code: 402 }
+			)
 		}
 	} catch (err) {
 		console.error(err)
 	}
 } // withLazy
 
-function useValidateBasicParam(): IValidation {
+function ValidateBasicParam(): IValidation {
 	const params = useParams()
 
 	for (const key in params) {
@@ -48,9 +53,9 @@ function useValidateBasicParam(): IValidation {
 	return {
 		status: 200,
 	}
-} //useValidateBasicParam()
+} //ValidateBasicParam()
 
-function useValidateCustomParams(): IValidation {
+function ValidateCustomParams(): IValidation {
 	const params = useParams()
 
 	const validation: IValidation = {
@@ -60,12 +65,14 @@ function useValidateCustomParams(): IValidation {
 	const matches = useMatches()
 	matches.some(function (item) {
 		const validate = (
-			item?.handle as
-				| {
-						params: { validate?: Function }
-				  }
-				| undefined
-		)?.params?.validate
+			item as {
+				handle?: {
+					params?: {
+						validate: (params: Params) => IValidation
+					}
+				}
+			}
+		)?.handle?.params?.validate
 
 		if (params && typeof validate === 'function' && !validate(params)) {
 			validation.status = 404
@@ -74,7 +81,7 @@ function useValidateCustomParams(): IValidation {
 	})
 
 	return validation
-} // useValidateCustomParams()
+} // ValidateCustomParams()
 
 function useProtectRoute(): IValidation {
 	const matches = useMatches()
@@ -85,7 +92,7 @@ function useProtectRoute(): IValidation {
 		const protect = (
 			item?.handle as
 				| {
-						protect: Function
+						protect: () => string
 				  }
 				| undefined
 		)?.protect
@@ -114,12 +121,14 @@ function useSplitParams(): Params<string> {
 
 	matches.forEach(function (item) {
 		const splitParams = (
-			item?.handle as
-				| {
-						params: { split?: Function }
-				  }
-				| undefined
-		)?.params?.split
+			item as {
+				handle?: {
+					params?: {
+						split: (params: Params) => Params
+					}
+				}
+			}
+		)?.handle?.params?.split
 
 		if (params && typeof splitParams === 'function') {
 			newParams = {
@@ -146,13 +155,13 @@ function RouterInit({ children }) {
 
 function RouterValidation({ children }) {
 	let validation: IValidation = { status: 200 }
-	validation = useValidateBasicParam()
+	validation = ValidateBasicParam()
 
 	if (validation.status === 404) {
 		return <NotFoundPage />
 	}
 
-	validation = useValidateCustomParams()
+	validation = ValidateCustomParams()
 
 	if (validation.status === 404) {
 		return <NotFoundPage />

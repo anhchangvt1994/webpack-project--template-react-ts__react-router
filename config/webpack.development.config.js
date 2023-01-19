@@ -116,7 +116,7 @@ const WebpackDevelopmentConfiguration = async () => {
 					exclude: /node_modules/,
 				},
 				{
-					test: /libs\/socket.io.min.js/,
+					test: /libs[\\/]socket.io.min.js/,
 					type: 'asset/resource',
 					generator: {
 						filename: '[name][ext]',

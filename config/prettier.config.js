@@ -1,5 +1,4 @@
 module.exports = {
-	editorconfig: true,
 	bracketSameLine: false,
 	semi: false,
 	singleQuote: true,

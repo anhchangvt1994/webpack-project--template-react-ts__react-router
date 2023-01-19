@@ -28,7 +28,7 @@ export default function ModuleContentSection({
 }) {
 	return (
 		<Section>
-			<ImageItem src="" alt={caption} />
+			<ImageItem src={src || ''} alt={caption} />
 			<Caption>{caption}</Caption>
 			<Content>{content}</Content>
 		</Section>

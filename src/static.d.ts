@@ -1,44 +1,44 @@
 declare module '*.svg' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.png' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.jpg' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.jpeg' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.webp' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.mp3' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.mp4' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.mov' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.mkv' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.webm' {
-	const value: any
+	const value: string
 	export = value
 }
 declare module '*.scss' {
-	const value: any
+	const value: string
 	export = value
 }

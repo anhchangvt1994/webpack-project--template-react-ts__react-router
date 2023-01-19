@@ -9,7 +9,7 @@
 		"lint:fix": "npm run lint -- --fix",
 		"prettier:fix": "npm run prettier -- --write",
 		"format": "npm run prettier:fix && npm run lint:fix",
-		"prepare": "npx husky install",
+		"prepare": "git config core.autocrlf false && npx husky install",
 		"pre-commit": "lint-staged"
 	},
 	"browserslist": [
@@ -83,7 +83,7 @@
 	},
 	"eslintConfig": {
 		"extends": [
-			"config/eslint.config.js"
+			"./config/eslint.config.js"
 		]
 	},
 	"prettier": "./config/prettier.config.js",

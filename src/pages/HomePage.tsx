@@ -1,4 +1,4 @@
-import ModuleSection from 'src/components/home-page/ModuleSection'
+import ModuleSection from 'components/home-page/ModuleSection'
 
 function HomePage() {
 	return (
