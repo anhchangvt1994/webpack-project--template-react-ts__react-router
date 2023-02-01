@@ -15,9 +15,7 @@ module.exports = (async () => {
 			...(process.env.ESM
 				? {
 						module: true,
-						// library: { type: 'module' },
 						environment: {
-							// module: true,
 							dynamicImport: true,
 						},
 				  }
@@ -90,6 +88,14 @@ module.exports = (async () => {
 				'import.meta.env': ENV_OBJ_WITH_JSON_STRINGIFY_VALUE,
 			}),
 		],
+		stats: {
+			assetsSort: '!size',
+			children: false,
+			usedExports: false,
+			modules: false,
+			entrypoints: false,
+			excludeAssets: [/\.*\.map/],
+		},
 		cache: {
 			type: 'filesystem',
 			compression: 'gzip',
@@ -122,7 +128,6 @@ module.exports = (async () => {
 						filename: '[chunkhash:8].js',
 						enforce: true,
 						reuseExistingChunk: true,
-						// minSizeReduction: 100000,
 					},
 					utils: {
 						chunks: 'all',
@@ -131,7 +136,6 @@ module.exports = (async () => {
 						reuseExistingChunk: true,
 						minSize: 10000,
 						maxSize: 100000,
-						// enforce: true,
 					},
 					config: {
 						chunks: 'all',
@@ -140,16 +144,6 @@ module.exports = (async () => {
 						reuseExistingChunk: true,
 						minSize: 10000,
 						maxSize: 100000,
-						// enforce: true,
-					},
-					components: {
-						chunks: 'all',
-						test: /[\\/]components[\\/]/,
-						filename: '[chunkhash:8].js',
-						reuseExistingChunk: true,
-						minSize: 10000,
-						maxSize: 100000,
-						// enforce: true,
 					},
 				},
 			},
@@ -176,7 +170,7 @@ module.exports = (async () => {
 					parallel: 4,
 
 					minify: [
-						CssMinimizerPlugin.esbuildMinify,
+						// CssMinimizerPlugin.esbuildMinify,
 						CssMinimizerPlugin.cssnanoMinify,
 						CssMinimizerPlugin.cssoMinify,
 						CssMinimizerPlugin.cleanCssMinify,
@@ -184,6 +178,7 @@ module.exports = (async () => {
 				}),
 			],
 		}, // optimization
+		target: process.env.ESM ? 'web' : 'browserslist',
 		...(process.env.ESM
 			? {
 					experiments: {

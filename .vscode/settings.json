@@ -3,13 +3,15 @@
 
 	"path-autocomplete.extensionOnImport": true,
 	"path-autocomplete.includeExtension": true,
-	"path-autocomplete.disableUpOneFolder": false,
-	"path-autocomplete.enableFolderTrailingSlash": false,
 	"path-autocomplete.excludedItems": {
-		"**": { "when": "**/*.{js,ts,jsx,tsx}", "isDir": true }
+		"**": {
+			"when": "**/*.{js,ts,jsx,tsx}",
+			"isDir": true,
+			"context": "(import|require).*"
+		}
 	},
 	"path-autocomplete.pathMappings": {
-		"images": "${workspace}/src/assets/images",
+		"/": "${workspace}/src/assets/static",
 		"assets": "${workspace}/src/assets"
 	},
 	"path-autocomplete.pathSeparators": " \t({[",

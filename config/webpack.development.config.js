@@ -1,3 +1,4 @@
+const path = require('path')
 const fs = require('fs')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -85,36 +86,36 @@ const WebpackDevelopmentConfiguration = async () => {
 		module: {
 			rules: [
 				// NOTE - Option 2
-				// {
-				// 	test: /.(jsx|tsx|js|ts)$/,
-				// 	exclude: /(node_modules)/,
-				// 	use: {
-				// 		loader: 'swc-loader',
-				// 		options: {
-				// 			jsc: {
-				// 				parser: {
-				// 					syntax: 'typescript',
-				// 					tsx: true,
-				// 					decorators: false,
-				// 					dynamicImport: true,
-				// 				},
-				// 				target: 'es2015',
-				// 			},
-				// 		},
-				// 	},
-				// },
-				// NOTE - Option 1 (popular)
 				{
-					test: /\.(jsx|tsx|js|ts)$/,
+					test: /.(jsx|tsx|js|ts)$/,
+					exclude: /(node_modules)/,
 					use: {
-						loader: 'esbuild-loader',
+						loader: 'swc-loader',
 						options: {
-							loader: 'tsx',
-							target: 'esnext',
+							jsc: {
+								parser: {
+									syntax: 'typescript',
+									tsx: true,
+									decorators: false,
+									dynamicImport: true,
+								},
+								target: 'esnext',
+							},
 						},
 					},
-					exclude: /node_modules/,
 				},
+				// NOTE - Option 1 (popular)
+				// {
+				// 	test: /\.(jsx|tsx|js|ts)$/,
+				// 	use: {
+				// 		loader: 'esbuild-loader',
+				// 		options: {
+				// 			loader: 'tsx',
+				// 			target: 'esnext',
+				// 		},
+				// 	},
+				// 	exclude: /node_modules/,
+				// },
 				{
 					test: /libs[\\/]socket.io.min.js/,
 					type: 'asset/resource',
@@ -174,7 +175,7 @@ const WebpackDevelopmentConfiguration = async () => {
 						})
 					},
 					{
-						fileDependencies: `${PROJECT_PATH}/env/.env`,
+						fileDependencies: path.resolve(__dirname, './env/.env'),
 					}
 				),
 			}),
@@ -184,6 +185,11 @@ const WebpackDevelopmentConfiguration = async () => {
 				_socket.emit('updateProgressPercentage', Math.ceil(percentage * 100))
 			}),
 		].filter(Boolean),
+
+		stats: {
+			preset: 'errors-only',
+			all: false,
+		},
 
 		cache: {
 			// NOTE - Type memory
@@ -203,34 +209,11 @@ const WebpackDevelopmentConfiguration = async () => {
 			splitChunks: {
 				cacheGroups: {
 					default: false,
-					styles: {
-						// NOTE - For mini-css-extract
-						// chunks: 'all',
-						// type: 'css/mini-extract',
-						// priority: 100,
-						// minChunks: 1,
-						// minSize: 0,
-						// maxSize: 500,
-						// minSizeReduction: 500,
-						// enforce: true,
-						// NOTE - For style-loader
-						// name: 'bundle',
-						// filename: '[contenthash].js',
-						// test: /\.((c|sa|sc)ss)$/i,
-						// chunks: 'all',
-						// priority: 100,
-						// enforce: true,
-						// minSize: 0,
-						// maxSize: 500,
-						// minSizeReduction: 500,
-					}, // styles
 					vendors: {
 						chunks: 'all',
 						test: /[\\/]node_modules[\\/]/,
 						name: 'vendors',
 						reuseExistingChunk: true,
-						// minSize: 30000,
-						// maxSize: 200000,
 						enforce: true,
 					},
 					utils: {
@@ -238,27 +221,21 @@ const WebpackDevelopmentConfiguration = async () => {
 						test: /[\\/]utils[\\/]/,
 						name: 'utils',
 						reuseExistingChunk: true,
-						minSize: 10000,
-						maxSize: 100000,
-						// enforce: true,
+						enforce: true,
 					},
 					config: {
 						chunks: 'async',
 						test: /[\\/]config[\\/]/,
 						name: 'config',
 						reuseExistingChunk: true,
-						minSize: 10000,
-						maxSize: 100000,
-						// enforce: true,
+						enforce: true,
 					},
 					components: {
 						chunks: 'async',
 						test: /[\\/]components[\\/]/,
 						name: 'components',
 						reuseExistingChunk: true,
-						minSize: 10000,
-						maxSize: 100000,
-						// enforce: true,
+						enforce: true,
 					},
 				}, // cacheGroups
 			},

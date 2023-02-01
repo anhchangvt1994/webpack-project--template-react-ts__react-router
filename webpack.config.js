@@ -3,6 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 const PROJECT_PATH = __dirname.replace(/\\/g, '/')
 const resolve =
@@ -66,6 +67,7 @@ module.exports = async (env, arg) => {
 						},
 						{
 							loader: 'css-loader',
+							options: { url: false },
 						},
 						{
 							loader: 'postcss-loader',
@@ -73,6 +75,8 @@ module.exports = async (env, arg) => {
 								postcssOptions: {
 									plugins: [
 										'postcss-preset-env',
+										'postcss-simple-vars',
+										'tailwindcss/nesting',
 										'autoprefixer',
 										require('tailwindcss')(
 											PROJECT_PATH + '/tailwind.config.js'
@@ -81,30 +85,15 @@ module.exports = async (env, arg) => {
 								},
 							},
 						},
-						{
-							loader: 'sass-loader',
-							options: {
-								additionalData: '@import "assets/styles/main.scss";',
-								sassOptions: {
-									hmr: true,
-									includePaths: [
-										'node_modules',
-										'assets',
-										'assets/styles',
-										'assets/fonts',
-										'assets/images',
-										'assets/videos',
-									],
-									sourceMap: arg.mode === 'development',
-									warnRuleAsWarning: true,
-								},
-							},
-						},
 					],
 				},
+				// NOTE - This config to resolve asset's paths
 				{
 					test: /\.(png|jpe?g|gif|webm|mp4|svg|ico|tff|eot|otf|woff|woff2)$/,
 					type: 'asset/resource',
+					generator: {
+						emit: false,
+					},
 					exclude: [/node_modules/],
 				},
 				...(WebpackConfigWithMode?.module?.rules ?? []),
@@ -112,6 +101,23 @@ module.exports = async (env, arg) => {
 		},
 		plugins: [
 			new CleanWebpackPlugin(),
+			new CopyPlugin({
+				patterns: [
+					{
+						from: './src/assets/static',
+						filter: (resourcePath) => {
+							if (
+								arg.mode === 'production' &&
+								resourcePath.indexOf('images/development') !== -1
+							) {
+								return false
+							}
+
+							return true
+						},
+					},
+				],
+			}),
 			new MiniCssExtractPlugin({
 				filename:
 					arg.mode === 'development'
@@ -170,6 +176,7 @@ module.exports = async (env, arg) => {
 			}),
 			...(WebpackConfigWithMode.plugins || []),
 		],
+		stats: WebpackConfigWithMode.stats || 'detailed',
 		cache: WebpackConfigWithMode.cache || true,
 		optimization: WebpackConfigWithMode.optimization || {},
 		experiments: WebpackConfigWithMode.experiments || {},

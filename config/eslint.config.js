@@ -1,6 +1,6 @@
 module.exports = {
 	root: true,
-	ignorePatterns: ['webpack.config.js', 'env/**/*', 'config/**/*'],
+	ignorePatterns: ['webpack.config.js', 'env/**/*', 'config/**/*', 'dist/**/*'],
 	extends: [
 		'.eslintrc-auto-import.json',
 		'airbnb-typescript',

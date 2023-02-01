@@ -80,7 +80,6 @@
 		// NOTE - Allow you write (import React from "react";) instead of (import * as React from "react";)
 		// https://www.typescriptlang.org/tsconfig#allowSyntheticDefaultImports
 		"allowSyntheticDefaultImports": true,
-		"importsNotUsedAsValues": "error",
 		"importHelpers": true,
 		"sourceMap": true
 		// "types": ["webpack-env", "react"]
