@@ -39,7 +39,6 @@ const WebpackDevelopmentConfiguration = async () => {
 		output: {
 			publicPath: '/',
 			module: true,
-			// library: { type: 'module' },
 			environment: {
 				dynamicImport: true,
 			},
@@ -64,7 +63,10 @@ const WebpackDevelopmentConfiguration = async () => {
 			hot: true,
 			liveReload: false,
 			host: process.env.PROJECT_IPV4_HOST,
-			client: { overlay: false }, // NOTE - Use overlay of react refresh plugin
+			client: {
+				overlay: false,
+				logging: 'warn', // Want to set this to 'warn' or 'error'
+			}, // NOTE - Use overlay of react refresh plugin
 			historyApiFallback: true,
 			devMiddleware: {
 				publicPath: '/',
@@ -98,6 +100,12 @@ const WebpackDevelopmentConfiguration = async () => {
 									tsx: true,
 									decorators: false,
 									dynamicImport: true,
+								},
+								transform: {
+									react: {
+										development: true,
+										refresh: true,
+									},
 								},
 								target: 'esnext',
 							},
@@ -139,7 +147,7 @@ const WebpackDevelopmentConfiguration = async () => {
 				// excludeChunks: ["socket.io-client"],
 			}),
 			RecompileLoadingScreenInitial,
-			new ReactRefreshPlugin(),
+			new ReactRefreshPlugin({ esModule: true, overlay: true }),
 			new WebpackCustomizeDefinePlugin({
 				'import.meta.env': WebpackCustomizeDefinePlugin.RuntimeUpdateValue(
 					() => {
@@ -227,13 +235,6 @@ const WebpackDevelopmentConfiguration = async () => {
 						chunks: 'async',
 						test: /[\\/]config[\\/]/,
 						name: 'config',
-						reuseExistingChunk: true,
-						enforce: true,
-					},
-					components: {
-						chunks: 'async',
-						test: /[\\/]components[\\/]/,
-						name: 'components',
 						reuseExistingChunk: true,
 						enforce: true,
 					},
