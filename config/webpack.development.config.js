@@ -38,18 +38,11 @@ const WebpackDevelopmentConfiguration = async () => {
 		entry: {},
 		output: {
 			publicPath: '/',
-			module: true,
 			environment: {
 				dynamicImport: true,
 			},
-			scriptType: 'module',
-		},
-		externals: {
-			react: 'module https://esm.sh/react@18.2.0?dev',
-			'react-dom': 'module https://esm.sh/react-dom@18.2.0?dev',
-			'react-router-dom': 'module https://esm.sh/react-router-dom@6.6.2?dev',
-			'styled-components': 'module https://esm.sh/styled-components@5.3.6?dev',
-			polished: 'module https://esm.sh/polished@4.2.2?dev',
+			// module: true,
+			// library: { type: 'module' },
 		},
 		devtool: 'inline-source-map', // NOTE - BAD Performance, GOOD debugging
 		// devtool: 'eval-cheap-module-source-map', // NOTE - SLOW Performance, GOOD debugging
@@ -101,12 +94,6 @@ const WebpackDevelopmentConfiguration = async () => {
 									decorators: false,
 									dynamicImport: true,
 								},
-								transform: {
-									react: {
-										development: true,
-										refresh: true,
-									},
-								},
 								target: 'esnext',
 							},
 						},
@@ -142,12 +129,11 @@ const WebpackDevelopmentConfiguration = async () => {
 					env: process.env.ENV,
 					ioHost: JSON.stringify(process.env.IO_HOST),
 				},
-				scriptLoading: 'module',
-				// NOTE - Tell HtmlWebpackPlugin does not auto insert these files
-				// excludeChunks: ["socket.io-client"],
+				// scriptLoading: 'module',
 			}),
 			RecompileLoadingScreenInitial,
-			new ReactRefreshPlugin({ esModule: true, overlay: true }),
+			new ReactRefreshPlugin(),
+			// { esModule: true, overlay: true }
 			new WebpackCustomizeDefinePlugin({
 				'import.meta.env': WebpackCustomizeDefinePlugin.RuntimeUpdateValue(
 					() => {
@@ -203,48 +189,28 @@ const WebpackDevelopmentConfiguration = async () => {
 			// NOTE - Type memory
 			type: 'memory',
 			cacheUnaffected: true,
-			maxGenerations: Infinity,
-
-			// NOTE - Type filesystem
-			// type: 'filesystem',
-			// compression: 'gzip',
 		},
 
-		// NOTE - We need get single runtime chunk to ignore issue hot module replacement does not work after changing a file
-		// reference: https://github.com/webpack/webpack-dev-server/issues/2792
 		optimization: {
-			runtimeChunk: 'single',
-			splitChunks: {
-				cacheGroups: {
-					default: false,
-					vendors: {
-						chunks: 'all',
-						test: /[\\/]node_modules[\\/]/,
-						name: 'vendors',
-						reuseExistingChunk: true,
-						enforce: true,
-					},
-					utils: {
-						chunks: 'async',
-						test: /[\\/]utils[\\/]/,
-						name: 'utils',
-						reuseExistingChunk: true,
-						enforce: true,
-					},
-					config: {
-						chunks: 'async',
-						test: /[\\/]config[\\/]/,
-						name: 'config',
-						reuseExistingChunk: true,
-						enforce: true,
-					},
-				}, // cacheGroups
-			},
+			runtimeChunk: false,
+			removeAvailableModules: false,
+			removeEmptyChunks: false,
+			splitChunks: false,
+			sideEffects: false,
+			providedExports: false,
 		},
+		// NOTE - refer to: https://github.com/webpack/webpack/issues/12102
 		experiments: {
-			lazyCompilation: true,
+			lazyCompilation: {
+				imports: true,
+				entries: true,
+				test: (module) =>
+					!/[\\/](node_modules|src\/(utils|config|assets))[\\/]/.test(
+						module.nameForCondition()
+					),
+			},
+			layers: true,
 			cacheUnaffected: true,
-			outputModule: true,
 		},
 	}
 }

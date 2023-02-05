@@ -98,6 +98,8 @@ module.exports = (async () => {
 		},
 		cache: {
 			type: 'filesystem',
+			allowCollectingMemory: true,
+			memoryCacheUnaffected: true,
 			compression: 'gzip',
 		},
 		performance: {
@@ -185,6 +187,10 @@ module.exports = (async () => {
 						outputModule: true,
 					},
 			  }
-			: {}),
+			: {
+					experiments: {
+						cacheUnaffected: true,
+					},
+			  }),
 	}
 })()
