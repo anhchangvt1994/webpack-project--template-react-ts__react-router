@@ -1,12 +1,8 @@
 import type { IUserInfo } from 'context/UserInfoContext'
 import type { To } from 'react-router'
 import type { INavigateInfo } from 'config/router/context/InfoContext'
-import type {
-	IValidation,
-	// IProtectionContext,
-} from 'config/router/context/ValidationContext'
+import type { IValidation } from 'config/router/context/ValidationContext'
 import { useUserInfo } from 'context/UserInfoContext'
-// import { ProtectionContext } from 'config/router/context/ValidationContext'
 import { useRoute, useNavigateInfo } from 'config/router/context/InfoContext'
 
 export interface ICertInfo {
@@ -28,7 +24,7 @@ function useProtectRoute(): IValidation {
 		status: 200,
 	}
 
-	const userInfo = useUserInfo()
+	const { userInfo } = useUserInfo()
 
 	const navigateInfo = useNavigateInfo()
 

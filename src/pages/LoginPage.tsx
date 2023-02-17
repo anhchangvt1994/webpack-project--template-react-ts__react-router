@@ -40,10 +40,10 @@ const Button = styled.button`
 
 export default function LoginPage() {
 	const route = useRoute()
-	const userInfo = useUserInfo()
+	const { userInfo, setUserInfo } = useUserInfo()
 
 	const onClickLogin = () => {
-		userInfo.email = 'abc@gmail.com'
+		setUserInfo({ ...userInfo, email: 'abc@gmail.com' })
 		route.handle.reProtect?.()
 	}
 

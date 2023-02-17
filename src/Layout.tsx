@@ -2,7 +2,6 @@ import ErrorBoundary from 'utils/ErrorBoundary'
 import LoadingBoundary from 'utils/LoadingBoundary'
 import LoadingPageComponent from 'components/LoadingPageComponent'
 import ErrorLoadingPageComponent from 'components/ErrorPageComponent'
-import type { IUserInfo } from 'context/UserInfoContext'
 import { useUserInfo } from 'context/UserInfoContext'
 import { useRoute } from 'config/router/context/InfoContext'
 
@@ -23,16 +22,10 @@ const Header = styled.header`
 function Layout() {
 	const location = useLocation()
 	const route = useRoute()
-	const userInfo = useUserInfo()
-
-	const [userState, setUserState] = useState<IUserInfo>(userInfo)
-
-	console.log(userInfo)
-	console.log(userState)
+	const { userState, setUserInfo } = useUserInfo()
 
 	const onClickLogout = () => {
-		userInfo.email = ''
-		setUserState({ ...userInfo, email: userInfo.email })
+		setUserInfo({ ...userState, email: '' })
 		route.handle.reProtect?.()
 	}
 

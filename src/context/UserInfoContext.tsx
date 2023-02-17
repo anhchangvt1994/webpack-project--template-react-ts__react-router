@@ -4,13 +4,32 @@ export type IUserInfo = {
 
 const INIT_USER_INFO: IUserInfo = { email: '' }
 
-export const UserInfoContext = createContext<IUserInfo>(INIT_USER_INFO)
+export const UserInfoContext = createContext<{
+	userInfo: IUserInfo
+	userState: IUserInfo
+	setUserInfo: (newVal: IUserInfo) => void
+}>({
+	userInfo: INIT_USER_INFO,
+	userState: INIT_USER_INFO,
+	setUserInfo: (val) => null,
+})
 
 export function UserInfoProvider({ children }) {
-	const userInfo: IUserInfo = INIT_USER_INFO
+	const [userState, setUserState] = useState(INIT_USER_INFO)
+	const userInfo = userState
+
+	const setUserInfo: (newVal: IUserInfo) => void = (newVal: IUserInfo) => {
+		setUserState(newVal)
+	}
 
 	return (
-		<UserInfoContext.Provider value={userInfo}>
+		<UserInfoContext.Provider
+			value={{
+				userInfo,
+				userState,
+				setUserInfo,
+			}}
+		>
 			{children}
 		</UserInfoContext.Provider>
 	)
