@@ -22,5 +22,5 @@
 		"source.formatDocument",
 		"source.fixAll.tslint",
 		"source.fixAll.eslint"
-	]
+	],
 }

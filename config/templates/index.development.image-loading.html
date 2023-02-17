@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
+  <% if(env==='development' ) { %>
+    <script src="<%= require('@/config/libs/socket.io.min.js') %>"></script>
+    <% } %>
+      <% if(env==='development') { %>
+        <style>
+          /* Pacman style region */
+          .compilation-loading-screen {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            opacity: 1;
+            z-index: 1000;
+          }
+
+          .compilation-loading-screen.--is-hidden {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+
+          .compilation-loading-screen.--is-none {
+            display: none;
+          }
+
+          .compilation-loading-screen__inner {
+            width: 280px;
+          }
+
+          .compilation-loading-screen__image-outer {
+            position: relative;
+            max-width: 320px;
+            height: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+
+          .compilation-loading-screen__image {
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+            margin-bottom: 24px;
+            transition-property: opacity;
+            transition-timing-function: ease;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+          }
+
+          .compilation-loading-screen__image.--is-none {
+            transition: none;
+            display: none;
+          }
+
+          .compilation-loading-screen__image.--is-hidden {
+            opacity: 0;
+            transition-duration: 0.2s;
+          }
+
+          .compilation-loading-screen__image.--is-show {
+            opacity: 1;
+            transition-duration: 0.2s;
+          }
+
+          @media screen and (min-width: 580px) {
+            .compilation-loading-screen__image-outer {
+              max-width: 480px;
+              height: 320px;
+            }
+            .compilation-loading-screen__image {
+              max-width: 480px;
+            }
+          }
+
+          /* Progress Bar style region */
+          .compilation-loading-screen__progress-wrapper {
+            background: #fff3cc;
+            border: solid 1px #fff3cc;
+            border-radius: 10px;
+            height: 20px;
+            /* overflow: hidden; */
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05) inset;
+            margin-top: 24px;
+          }
+
+          .compilation-loading-screen__progress-bar {
+            background: #fed75a;
+            height: inherit;
+          }
+
+          .compilation-loading-screen__progress-bar--width {
+            border-radius: 10px;
+          }
+
+          .compilation-loading-screen__progress-bar--transition {
+            transition: width 0.1s ease-out;
+          }
+
+          .compilation-loading-screen__progress-bar--anim {
+            position: relative;
+            animation: progress 3s linear infinite;
+            /* Don't touch this anim bar color*/
+            background: linear-gradient(
+              -45deg,
+              rgba(255, 255, 255, 0.25) 25%,
+              transparent 25%,
+              transparent 50%,
+              rgba(255, 255, 255, 0.25) 50%,
+              rgba(255, 255, 255, 0.25) 75%,
+              transparent 75%,
+              transparent
+            );
+            /* Don't touch this */
+            background-repeat: repeat-x;
+            /* The size of the bars must match the background-position in the @keyframes */
+            background-size: 1.5em 1.5em;
+            border-radius: 10px;
+            height: inherit;
+            width: 100%;
+          }
+
+          .compilation-loading-screen__progress-bar--milestones {
+            position: absolute;
+            right: -25px;
+            top: calc(100% + 4px);
+          }
+
+          @keyframes progress {
+            to {
+              background-position: 1.5em 0;
+            }
+          }
+          /* End Progress Bar style region */
+        </style>
+        <% } %>
+</head>
+
+<body>
+  <div id="root"></div>
+  <% if(env==='development' ) { %>
+    <div id="compilation-loading__screen" class="compilation-loading-screen">
+      <div class="compilation-loading-screen__inner">
+        <div class="compilation-loading-screen__image-outer">
+          <img class="compilation-loading-screen__image --is-show" src="/images/development/png/kunfu_panda/01.png" alt="loading screen" />
+          <img class="compilation-loading-screen__image --is-hidden" src="/images/development/png/kunfu_panda/02.png" alt="loading screen" />
+          <img class="compilation-loading-screen__image --is-hidden" src="/images/development/png/kunfu_panda/03.png" alt="loading screen" />
+          <img class="compilation-loading-screen__image --is-hidden" src="/images/development/png/kunfu_panda/04.png" alt="loading screen" />
+          <img class="compilation-loading-screen__image --is-hidden" src="/images/development/png/kunfu_panda/05.png" alt="loading screen" />
+        </div>
+        <!-- .compilation-loading-screen__image-outer -->
+
+        <div class="compilation-loading-screen__progress-wrapper">
+          <div class="compilation-loading-screen__progress-bar compilation-loading-screen__progress-bar--width"
+            style="width: 0">
+            <div class="compilation-loading-screen__progress-bar--anim">
+              <div class="compilation-loading-screen__progress-bar--milestones">
+                <img width="50" style="max-width: none" src="/images/development/webp/kungfu-panda.webp" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- .progress-wrapper -->
+      </div>
+      <!-- .compilation-loading-screen__inner -->
+    </div>
+    <% } %>
+      <% if(env==='development' ) { %>
+        <script>
+          let isFirstCompiling = true
+
+          const _setupLoadingScreenImage = () => {
+            const elLoadingScreenImage = document.getElementsByClassName("compilation-loading-screen__image")
+
+            if(!elLoadingScreenImage || !elLoadingScreenImage.length) return () => {}
+
+            let timeout = null
+            let curIndex = 0
+
+            function handler(isRecursive=false) {
+              if(isFirstCompiling) {
+                const prevIndex = curIndex
+                curIndex = curIndex < elLoadingScreenImage.length - 1 ? curIndex + 1 : 0
+                if(!timeout) {
+                  timeout = setTimeout(function() {
+                    elLoadingScreenImage[curIndex].classList.remove('--is-hidden')
+                    elLoadingScreenImage[curIndex].classList.add('--is-show')
+
+                    elLoadingScreenImage[prevIndex].classList.remove('--is-show')
+                    elLoadingScreenImage[prevIndex].classList.add('--is-hidden')
+
+                    clearTimeout(timeout)
+                    timeout = null
+
+                    setTimeout(function() {
+                      handler(true)
+                    }, 200)
+                  }, 1300)
+                }
+              } else if(isRecursive) {
+                for(const idx in elLoadingScreenImage) {
+                  if(idx === curIndex) {
+                    elLoadingScreenImage[idx].classList.remove('--is-show')
+                  } else if(elLoadingScreenImage[idx].classList) {
+                    elLoadingScreenImage[idx].classList.add('--is-none')
+                    elLoadingScreenImage[idx].classList.remove('--is-hidden')
+                  }
+                }
+              } else {
+                const prevIndex = curIndex
+                curIndex = curIndex < elLoadingScreenImage.length - 1 ? curIndex + 1 : 0
+
+                elLoadingScreenImage[curIndex].classList.remove('--is-none')
+                elLoadingScreenImage[prevIndex].classList.add('--is-none')
+              }
+            }
+
+            return handler
+          } // _setupLoadingScreenImage
+
+          ;(function () {
+            if (!window.io) return;
+
+            const handleLoadingScreen = _setupLoadingScreenImage()
+            handleLoadingScreen()
+
+            const IO_HOST = <%= ioHost || "localhost:3030" %>;
+            const socket = io(IO_HOST, {
+              transports: ["websocket"],
+              // forceNew: true,
+              multiplex: false,
+              upgrade: false,
+            });
+
+            socket.on('connect', function () {
+              const elRoot = document.getElementById('root');
+              const elLoadingScreen = document.getElementById("compilation-loading__screen");
+              const elProgressBarWidth = elLoadingScreen?.querySelector?.(".compilation-loading-screen__progress-bar--width") ?? null;
+              if (elRoot && elLoadingScreen && elProgressBarWidth) {
+                // NOTE - newestPercentage will keep new percentage of new progress
+                let newestPercentage = 0;
+                // NOTE - curPercentage will keep first percentage of first progress of each new change
+                let curPercentage = 0;
+
+                socket.on("updateProgressPercentage", function (percentage) {
+                  newestPercentage = percentage < 100 ? percentage : 99.9;
+                  if (newestPercentage === 0 || newestPercentage <= curPercentage || elLoadingScreen.classList.contains('--is-hidden')) return
+                  curPercentage = newestPercentage
+                  elProgressBarWidth.style.width = curPercentage + '%'
+                });
+
+                // (function () {
+                //   if (curPercentage > 0) return
+                //   curPercentage = 100;
+                //   elProgressBarWidth.style.width = '100%'
+                // })()
+
+                setTimeout(function () {
+                  elProgressBarWidth.classList.add('compilation-loading-screen__progress-bar--transition')
+                })
+                // NOTE - Notice for server that ioClient socket has ready
+                const intervalWatchingAppReady = setInterval(function () {
+                  if (!elRoot.innerHTML) return;
+
+                  if(isFirstCompiling) isFirstCompiling = false
+
+                  curPercentage = 100;
+                  elProgressBarWidth.style.width = curPercentage + '%'
+                  elLoadingScreen.classList.add("--is-hidden");
+
+                  setTimeout(function () {
+                    elLoadingScreen.classList.add("--is-none");
+                  }, 350);
+
+                  clearInterval(intervalWatchingAppReady);
+                });
+
+                // NOTE - Listening socket from server
+                socket.on("turnOnLoadingScreen", function () {
+                  /*console.log('newestPercentage', newestPercentage)
+                  console.log('curPercentage', curPercentage)
+                  console.log('--is-hidden', elLoadingScreen.classList.contains('--is-hidden'))
+                  console.log('--is-none', elLoadingScreen.
+                  classList.contains('--is-none'))*/
+                  if (curPercentage < 100 || !elLoadingScreen.classList.contains('--is-hidden') || (elLoadingScreen.classList.contains('--is-hidden') && !elLoadingScreen.classList.contains('--is-none'))) return
+                  handleLoadingScreen()
+                  curPercentage = 0;
+                  elProgressBarWidth.style.width = curPercentage;
+                  //curPercentage = newestPercentage;
+                  // console.log(curPercentage)
+
+                  elProgressBarWidth.classList.add('compilation-loading-screen__progress-bar--transition')
+
+                  if (curPercentage === 0) {
+                    curPercentage = 50;
+                    elProgressBarWidth.style.width = curPercentage;
+                  }
+
+                  /*setTimeout(function() {
+                    elProgressBarWidth.classList.add('compilation-loading-screen__progress-bar--transition')
+
+                    if(curPercentage === 0) {
+                      curPercentage = 50;
+                      elProgressBarWidth.style.width = curPercentage;
+                    }
+                  })*/
+                  elLoadingScreen.classList.remove("--is-hidden", "--is-none");
+                });
+
+                socket.on("turnOffLoadingScreen", function () {
+                  // NOTE - System compiling maybe have multiple done event, so we will compare newestPercentage and curPercentage, if equality then that even is realy ending
+                  if (newestPercentage < curPercentage || curPercentage < 99.9) return
+                  curPercentage = 100;
+                  elProgressBarWidth.style.width = curPercentage + '%'
+                  elLoadingScreen.classList.add("--is-hidden");
+                  elProgressBarWidth.classList.remove('compilation-loading-screen__progress-bar--transition')
+
+                  setTimeout(function () {
+                    elLoadingScreen.classList.add("--is-none");
+                  }, 350);
+                });
+              }
+            })
+
+            socket.on('disconnect', function () {
+              socket.close()
+            })
+          })()
+        </script>
+        <% } %>
+</body>
+
+</html>

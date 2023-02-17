@@ -118,8 +118,10 @@ module.exports = async (env, arg) => {
 				],
 			}),
 			new MiniCssExtractPlugin({
-				filename: '[name].[contenthash:8].css',
-				chunkFilename: '[id].[contenthash:8].css',
+				filename:
+					arg.mode === 'development' ? '[id].css' : '[id].[contenthash:8].css',
+				chunkFilename:
+					arg.mode === 'development' ? '[id].css' : '[id].[contenthash:8].css',
 				ignoreOrder: false,
 				experimentalUseImportModule: true,
 			}),
@@ -150,6 +152,8 @@ module.exports = async (env, arg) => {
 							'createBrowserRouter',
 							'RouterProvider',
 							'BrowserRouter',
+							'useMatches',
+							'generatePath',
 						],
 					},
 					{

@@ -1,3 +1,4 @@
+import { useRoute } from 'config/router/context/InfoContext'
 import ImageItem, { Outer as ImageOuter } from 'components/ImageItem'
 import { Suspender } from 'utils/Suspender'
 
@@ -31,18 +32,19 @@ const NameLabel = styled.p`
 `
 const ContentLabel = styled.div``
 
-const data = Suspender(
-	() =>
-		new Promise((res) => {
-			setTimeout(function () {
-				res('OK')
-			}, 2000)
-		})
-)
+const data = Suspender(() => {
+	const duration = Math.floor(Math.random() * 10) * 100
+	return new Promise((res) => {
+		setTimeout(function () {
+			res('OK')
+		}, duration)
+	})
+})
 
-export default function CommentRow() {
-	const amount = Math.floor(Math.random() * 4) + 1
-	// console.log('run')
+export default function CommentRow({ total }: { total?: number }) {
+	const route = useRoute()
+	const amount = total ? total : Math.floor(Math.random() * 4) + 1
+
 	data.start()
 
 	const commentItemList = new Array(amount).fill(null).map((val, idx) => (
@@ -64,6 +66,17 @@ export default function CommentRow() {
 			</MetaCol>
 		</Row>
 	))
+
+	if (route?.id !== import.meta.env.ROUTER_COMMENT_ID) {
+		commentItemList.push(
+			<Link
+				key={import.meta.env.ROUTER_COMMENT_ID}
+				to={`${route.fullPath}/detail`}
+			>
+				See more
+			</Link>
+		)
+	}
 
 	return <>{commentItemList}</>
 }

@@ -147,6 +147,14 @@ module.exports = (async () => {
 						minSize: 10000,
 						maxSize: 100000,
 					},
+					context: {
+						chunks: 'all',
+						test: /[\\/]context[\\/]/,
+						filename: '[chunkhash:8].js',
+						reuseExistingChunk: true,
+						minSize: 10000,
+						maxSize: 100000,
+					},
 				},
 			},
 

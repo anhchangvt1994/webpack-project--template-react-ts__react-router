@@ -314,19 +314,124 @@ As you can see, in react you must know more than and do more than, to create hel
 
 <h3 id="protect">Protect on route</h3>
 
-You can protect route by using the **handle.protect method**.
-Imagine that you have a route only allow V.I.P user, then you need to prevent other user enter that V.I.P route. In this case you can use protect route to resolve it. See code below
+You can protect route by using the [meta options and use beforeEach event to execute it](https://router.vuejs.org/guide/advanced/meta.html#route-meta-fields).
+We will make an example in this project. The PRD for protect route's case has some short description.
 
-```javascript
-{
-  path: import.meta.env.ROUTER_CONTENT_PATH,
-  element: withLazy(() => import('pages/ContentPage')),
-  handle: {
-    protect() {
-      const userInfo = useUserInfo()
-      return userInfo.isVip
-    }
-  },
+```markdown
+// PRD - Comment Page
+
+**Description**
+
+- Comment Page is the page contains full list of comments.
+- The user can enter Comment Page with two ways:
+
+1. Click "See more" from comment section in Content Page.
+2. copy and paste the url of Comment Page in browser's url bar.
+
+**Accessible rules**
+To access Comment Page user must:
+
+- Already logged
+
+If user haven't logged before, the system will auto redirect user to Login Page.
+
+If user have an account before, user will logged with that account, and after login success, the system will redirect user back to Comment Page.
+
+If user does not have an account before, user can go to Register Page and regist an account. After regist success, the system will auto login and redirect user go to Comment Page.
 ```
 
-Makesure your protect function is a **Pure Function**, it make your result will always right.
+You will have many choice to resolve for above PRD
+
+1. Use React Hook and Store (easy way to handle but never easy way to manage)
+
+- Router load Comment Page finish
+- Comment Page's hook actived
+- Check access rule. If invalid then store current path and redirect to Login Page
+- Login success redirect back to Comment Page path stored and remember clear that store's path variable.
+
+2. Use only react-router (harder to implement but easy to use and manage)
+
+- Setup **handle { protect() {... return boolean | string} }** and execute it in **RouterProtection** render-less.
+- If **protect()** return invalid, then the system will auto check if Comment Page need to back after success verify, then save the path of Comment Page, and redirect user to Login Page.
+- Login success redirect back to Comment Page.
+
+In this project, I will show you the second solution. Cause we just focus only react-router in this project, and cause redirect is a part of router's cases, so doesn't need use store and hook to resolve it.
+
+I handled for you executing **protect()** in this project, so you just only focus how to use it easy way. See code below
+
+```javascript
+// router/index
+
+// Init RouterProtection with WAITING_VERIFY_ROUTER_ID_LIST
+{
+  path: import.meta.env.ROUTER_BASE_PATH,
+  element: (
+    <RouterInit>
+      ...
+        <RouterProtection
+          WatingVerifyRouterIDList={WAITING_VERIFY_ROUTER_ID_LIST}
+        >
+          <Layout />
+        </RouterProtection>
+      ...
+    </RouterInit>
+  ),
+}
+
+// Config Protect method
+{
+  id: import.meta.env.ROUTER_COMMENT_ID,
+  path: import.meta.env.ROUTER_COMMENT_PATH,
+  element: withLazy(() => import('pages/CommentPage')),
+
+  handle: {
+    protect(certInfo) {
+      /**
+       * certInfo param contains
+       * {
+       *    user: {email?: string}
+       *    navigateInfo: {to: RouteLocationNormalized, from: RouteLocationNormalized}
+       *    successPath: string
+       * }
+       */
+      const userInfo = certInfo?.user
+
+      if (!userInfo || !userInfo.email)
+        return import.meta.env.ROUTER_LOGIN_PATH
+
+      return true
+    },
+  },
+},
+{
+  id: import.meta.env.ROUTER_LOGIN_ID,
+  path: import.meta.env.ROUTER_LOGIN_PATH,
+  element: withLazy(() => import('pages/LoginPage')),
+  handle: {
+    protect(certInfo) {
+      const userInfo = certInfo?.user
+
+      if (userInfo && userInfo.email) {
+        // NOTE - If logged > redirect to successPath OR previous path OR Home Page path
+
+        return certInfo.successPath
+          ? certInfo.successPath
+          : certInfo.navigateInfo?.from
+          ? certInfo.navigateInfo.from.fullPath
+          : import.meta.env.ROUTER_HOME_PATH
+      }
+
+      return true
+    },
+  },
+}, // Login Page
+```
+
+**NOTE**
+
+- Makesure your protect function is a **Pure Function**, it make your result will always right.
+- You can customize or implement your logic to handle protect case by using
+
+1. **shim-vue.d.ts** to declare type for **meta field**
+2. **config/router/utils/BeforeEachHandler.ts** to customize or implement logic.
+3. **config/router/index.ts** to init your handler.

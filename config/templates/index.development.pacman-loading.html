@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
+  <% if(env==='development' ) { %>
+    <script src="<%= require('@/config/libs/socket.io.min.js') %>"></script>
+    <script>
+      globalThis.__VUE_OPTIONS_API__ = <%= __VUE_OPTIONS_API__ || true %>;
+      globalThis.__VUE_PROD_DEVTOOLS__ = <%= __VUE_PROD_DEVTOOLS__ || false %>;
+    </script>
+    <% } %>
+      <% if(env==='development' ) { %>
+        <style>
+          /* Pacman style region */
+          .compilation-loading-screen {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            opacity: 1;
+            z-index: 1000;
+          }
+
+          .compilation-loading-screen.--is-hidden {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+
+          .compilation-loading-screen.--is-none {
+            display: none;
+          }
+
+          .compilation-loading-screen__inner {
+            width: 280px;
+          }
+
+          .compilation-loading-screen__pacman-segment {
+            position: relative;
+            overflow: hidden;
+            top: -5%;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(1),
+          .compilation-loading-screen__pacman-segment>div:nth-child(2) {
+            width: 0;
+            height: 0;
+            border: 50px solid #fed75a;
+            border-right-color: transparent;
+            border-radius: 50%;
+            left: 0px;
+            -webkit-animation: rotate_pacman_half_up 0.65s infinite;
+            animation: rotate_pacman_half_up 0.65s infinite;
+            position: relative;
+            z-index: 5;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(2) {
+            -webkit-animation-name: rotate_pacman_half_down;
+            animation-name: rotate_pacman_half_down;
+            margin-top: -100px;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(2) .compilation-loading-screen__pacman-eyes-item {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #000000;
+            right: 5px;
+            bottom: 15px;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(3),
+          .compilation-loading-screen__pacman-segment>div:nth-child(4),
+          .compilation-loading-screen__pacman-segment>div:nth-child(5),
+          .compilation-loading-screen__pacman-segment>div:nth-child(6),
+          .compilation-loading-screen__pacman-segment>div:nth-child(7),
+          .compilation-loading-screen__pacman-segment>div:nth-child(8),
+          .compilation-loading-screen__pacman-segment>div:nth-child(9),
+          .compilation-loading-screen__pacman-segment>div:nth-child(10),
+          .compilation-loading-screen__pacman-segment>div:nth-child(11) {
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            padding: 0 10px;
+            position: absolute;
+            top: 15px;
+            bottom: 0;
+            margin: auto 0;
+            left: 540px;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(3) {
+            -webkit-animation-delay: -4s;
+            animation-delay: -4s;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(4) {
+            -webkit-animation-delay: -3.5s;
+            animation-delay: -3.5s;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(5) {
+            -webkit-animation-delay: -3s;
+            animation-delay: -3s;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(6) {
+            -webkit-animation-delay: -2.5s;
+            animation-delay: -2.5s;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(7) {
+            -webkit-animation-delay: -2s;
+            animation-delay: -2s;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(8) {
+            -webkit-animation-delay: -1.5s;
+            animation-delay: -1.5s;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(9) {
+            -webkit-animation-delay: -1s;
+            animation-delay: -1s;
+          }
+
+          .compilation-loading-screen__pacman-segment>div:nth-child(10) {
+            -webkit-animation-delay: -0.5s;
+            animation-delay: -0.5s;
+          }
+
+          .compilation-loading-screen__pacman--ball-in {
+            -webkit-animation: pacman-balls-in 4.5s infinite linear;
+            animation: pacman-balls-in 4.5s infinite linear;
+          }
+
+          .compilation-loading-screen__pacman--ball-out {
+            -webkit-animation: pacman-balls-out 4.5s infinite linear;
+            animation: pacman-balls-out 4.5s infinite linear;
+          }
+
+          /*Pacman Animation Keyframes*/
+          @-webkit-keyframes rotate_pacman_half_up {
+            0% {
+              transform: rotate(270deg);
+            }
+
+            50% {
+              transform: rotate(360deg);
+            }
+
+            100% {
+              transform: rotate(270deg);
+            }
+          }
+
+          @keyframes rotate_pacman_half_up {
+            0% {
+              transform: rotate(270deg);
+            }
+
+            50% {
+              transform: rotate(360deg);
+            }
+
+            100% {
+              transform: rotate(270deg);
+            }
+          }
+
+          @-webkit-keyframes rotate_pacman_half_down {
+            0% {
+              transform: rotate(90deg);
+            }
+
+            50% {
+              transform: rotate(0);
+            }
+
+            100% {
+              transform: rotate(90deg);
+            }
+          }
+
+          @keyframes rotate_pacman_half_down {
+            0% {
+              transform: rotate(90deg);
+            }
+
+            50% {
+              transform: rotate(0);
+            }
+
+            100% {
+              transform: rotate(90deg);
+            }
+          }
+
+          @-webkit-keyframes pacman-balls-in {
+            0% {
+              scale: 0.7;
+            }
+
+            10% {
+              scale: 1;
+              translate: -60px;
+            }
+
+            20% {
+              scale: 0.7;
+              translate: -120px;
+            }
+
+            40% {
+              scale: 1;
+              translate: -180px;
+            }
+
+            50% {
+              scale: 0.7;
+              translate: -240px;
+            }
+
+            60% {
+              scale: 1;
+              translate: -300px;
+            }
+
+            70% {
+              scale: 0.7;
+              translate: -360px;
+            }
+
+            80% {
+              scale: 1;
+              translate: -420px;
+            }
+
+            90% {
+              scale: 0.7;
+              translate: -480px;
+            }
+
+            100% {
+              scale: 1;
+              opacity: 0.7;
+              translate: -540px;
+            }
+          }
+
+          @keyframes pacman-balls-in {
+            0% {
+              scale: 0.7;
+            }
+
+            10% {
+              scale: 1;
+              translate: -60px;
+            }
+
+            20% {
+              scale: 0.7;
+              translate: -120px;
+            }
+
+            40% {
+              scale: 1;
+              translate: -180px;
+            }
+
+            50% {
+              scale: 0.7;
+              translate: -240px;
+            }
+
+            60% {
+              scale: 1;
+              translate: -300px;
+            }
+
+            70% {
+              scale: 0.7;
+              translate: -360px;
+            }
+
+            80% {
+              scale: 1;
+              translate: -420px;
+            }
+
+            90% {
+              scale: 0.7;
+              translate: -480px;
+            }
+
+            100% {
+              scale: 1;
+              translate: -540px;
+            }
+          }
+
+          @-webkit-keyframes pacman-balls-out {
+            0% {
+              scale: 0.7;
+            }
+
+            10% {
+              scale: 1;
+              translate: -60px;
+            }
+
+            20% {
+              scale: 0.7;
+              translate: -120px;
+            }
+
+            40% {
+              scale: 1;
+              translate: -180px;
+            }
+
+            50% {
+              scale: 0.7;
+              translate: -240px;
+            }
+
+            60% {
+              scale: 1;
+              translate: -300px;
+            }
+
+            70% {
+              scale: 0.7;
+              translate: -360px;
+            }
+
+            80% {
+              scale: 1;
+              translate: -420px;
+            }
+
+            90% {
+              scale: 0.5;
+              opacity: 0.6;
+              translate: -320px;
+            }
+
+            100% {
+              scale: 0.1;
+              opacity: 0;
+              translate: -280px;
+            }
+          }
+
+          @keyframes pacman-balls-out {
+            0% {
+              scale: 0.7;
+            }
+
+            10% {
+              scale: 1;
+              translate: -60px;
+            }
+
+            20% {
+              scale: 0.7;
+              translate: -120px;
+            }
+
+            40% {
+              scale: 1;
+              translate: -180px;
+            }
+
+            50% {
+              scale: 0.7;
+              translate: -240px;
+            }
+
+            60% {
+              scale: 1;
+              translate: -300px;
+            }
+
+            70% {
+              scale: 0.7;
+              translate: -360px;
+            }
+
+            80% {
+              scale: 1;
+              translate: -420px;
+            }
+
+            90% {
+              scale: 0.5;
+              opacity: 0.6;
+              translate: -320px;
+            }
+
+            100% {
+              scale: 0.1;
+              opacity: 0;
+              translate: -280px;
+            }
+          }
+
+          /* End Pacman style region */
+
+          /* Progress Bar style region */
+          .compilation-loading-screen__progress-wrapper {
+            background: #fff3cc;
+            border: solid 1px #fff3cc;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05) inset;
+            margin-top: 24px;
+          }
+
+          .compilation-loading-screen__progress-bar {
+            background: #fed75a;
+            height: inherit;
+          }
+
+          .compilation-loading-screen__progress-bar--width {
+            border-radius: 10px;
+          }
+
+          .compilation-loading-screen__progress-bar--transition {
+            transition: width 0.1s ease-out;
+          }
+
+          .compilation-loading-screen__progress-bar--anim {
+            animation: progress 3s linear infinite;
+            /* Don't touch this anim bar color*/
+            background: linear-gradient(-45deg,
+                rgba(255, 255, 255, 0.25) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0.25) 75%,
+                transparent 75%,
+                transparent);
+            /* Don't touch this */
+            background-repeat: repeat-x;
+            /* The size of the bars must match the background-position in the @keyframes */
+            background-size: 1.5em 1.5em;
+            border-radius: 10px;
+            height: inherit;
+            width: 100%;
+          }
+
+          @keyframes progress {
+            to {
+              background-position: 1.5em 0;
+            }
+          }
+
+          /* End Progress Bar style region */
+        </style>
+        <% } %>
+</head>
+
+<body>
+  <div id="root"></div>
+  <% if(env==='development' ) { %>
+    <div id="compilation-loading__screen" class="compilation-loading-screen">
+      <div class="compilation-loading-screen__inner">
+        <div class="compilation-loading-screen__pacman-segment">
+          <div></div>
+          <div>
+            <span class="compilation-loading-screen__pacman-eyes-item"></span>
+          </div>
+          <div class="compilation-loading-screen__pacman--ball-out">
+            <img src="/images/development/svg/money.svg" alt="" width="40" height="40" />
+          </div>
+          <div class="compilation-loading-screen__pacman--ball-in">
+            <img src="/images/development/svg/onion-purple.svg" alt="" width="40" height="40" />
+          </div>
+          <div class="compilation-loading-screen__pacman--ball-in">
+            <img src="/images/development/svg/bug.svg" alt="" width="40" height="40" />
+          </div>
+          <div class="compilation-loading-screen__pacman--ball-out">
+            <img src="/images/development/svg/sycee-gold.svg" alt="" width="40" height="40" />
+          </div>
+          <div class="compilation-loading-screen__pacman--ball-out">
+            <img src="/images/development/svg/bitcoin.svg" alt="" width="40" height="40" />
+          </div>
+          <div class="compilation-loading-screen__pacman--ball-in">
+            <img src="/images/development/svg/medicines.svg" alt="" width="40" height="40" />
+          </div>
+          <div class="compilation-loading-screen__pacman--ball-in">
+            <img src="/images/development/svg/chili.svg" alt="" width="40" height="40" />
+          </div>
+          <div class="compilation-loading-screen__pacman--ball-out">
+            <img src="/images/development/svg/diamond.svg" alt="" width="40" height="40" />
+          </div>
+          <div class="compilation-loading-screen__pacman--ball-in">
+            <img src="/images/development/svg/cannabis.svg" alt="" width="40" height="40" />
+          </div>
+        </div>
+        <!-- .pacman -->
+
+        <div class="compilation-loading-screen__progress-wrapper">
+          <div class="compilation-loading-screen__progress-bar compilation-loading-screen__progress-bar--width"
+            style="width: 0">
+            <div class="compilation-loading-screen__progress-bar--anim"></div>
+          </div>
+        </div>
+        <!-- .progress-wrapper -->
+      </div>
+      <!-- .compilation-loading-screen__inner -->
+    </div>
+    <% } %>
+      <% if(env==='development' ) { %>
+        <script>
+          (function () {
+            if (!window.io) return;
+
+            const IO_HOST = <%= ioHost || "localhost:3030" %>;
+            const socket = io(IO_HOST, {
+              transports: ["websocket"],
+              // forceNew: true,
+              multiplex: false,
+              upgrade: false,
+            });
+
+            socket.on('connect', function () {
+              const elRoot = document.getElementById('root');
+              const elLoadingScreen = document.getElementById("compilation-loading__screen");
+              const elProgressBarWidth = elLoadingScreen?.querySelector?.(".compilation-loading-screen__progress-bar--width") ?? null;
+              if (elRoot && elLoadingScreen && elProgressBarWidth) {
+                // NOTE - newestPercentage will keep new percentage of new progress
+                let newestPercentage = 0;
+                // NOTE - curPercentage will keep first percentage of first progress of each new change
+                let curPercentage = 0;
+
+                socket.on("updateProgressPercentage", function (percentage) {
+                  newestPercentage = percentage < 100 ? percentage : 99.9;
+                  if (newestPercentage === 0 || newestPercentage <= curPercentage || elLoadingScreen.classList.contains('--is-hidden')) return
+                  curPercentage = newestPercentage
+                  elProgressBarWidth.style.width = curPercentage + '%'
+                });
+
+                // (function() {
+                //   if(curPercentage > 0) return
+                //   curPercentage = 100;
+                //   elProgressBarWidth.style.width = '100%'
+                // })()
+
+                setTimeout(function () {
+                  elProgressBarWidth.classList.add('compilation-loading-screen__progress-bar--transition')
+                })
+                // NOTE - Notice for server that ioClient socket has ready
+                const intervalWatchingAppReady = setInterval(function () {
+                  if (!elRoot.innerHTML) return;
+
+                  curPercentage = 100;
+                  elProgressBarWidth.style.width = curPercentage + '%'
+                  elLoadingScreen.classList.add("--is-hidden");
+
+                  setTimeout(function () {
+                    elLoadingScreen.classList.add("--is-none");
+                  }, 350);
+
+                  clearInterval(intervalWatchingAppReady);
+                });
+
+                // NOTE - Listening socket from server
+                socket.on("turnOnLoadingScreen", function () {
+                  /*console.log('newestPercentage', newestPercentage)
+                  console.log('curPercentage', curPercentage)
+                  console.log('--is-hidden', elLoadingScreen.classList.contains('--is-hidden'))
+                  console.log('--is-none', elLoadingScreen.
+                  classList.contains('--is-none'))*/
+                  if (curPercentage < 100 || !elLoadingScreen.classList.contains('--is-hidden') || (elLoadingScreen.classList.contains('--is-hidden') && !elLoadingScreen.classList.contains('--is-none'))) return
+                  curPercentage = 0;
+                  elProgressBarWidth.style.width = curPercentage;
+                  //curPercentage = newestPercentage;
+                  // console.log(curPercentage)
+
+                  elProgressBarWidth.classList.add('compilation-loading-screen__progress-bar--transition')
+
+                  if (curPercentage === 0) {
+                    curPercentage = 50;
+                    elProgressBarWidth.style.width = curPercentage;
+                  }
+
+                  /*setTimeout(function() {
+                    elProgressBarWidth.classList.add('compilation-loading-screen__progress-bar--transition')
+
+                    if(curPercentage === 0) {
+                      curPercentage = 50;
+                      elProgressBarWidth.style.width = curPercentage;
+                    }
+                  })*/
+                  elLoadingScreen.classList.remove("--is-hidden", "--is-none");
+                });
+
+                socket.on("turnOffLoadingScreen", function () {
+                  // NOTE - System compiling maybe have multiple done event, so we will compare newestPercentage and curPercentage, if equality then that even is realy ending
+                  if (newestPercentage < curPercentage || curPercentage < 99.9) return
+                  curPercentage = 100;
+                  elProgressBarWidth.style.width = curPercentage + '%'
+                  elLoadingScreen.classList.add("--is-hidden");
+                  elProgressBarWidth.classList.remove('compilation-loading-screen__progress-bar--transition')
+
+                  setTimeout(function () {
+                    elLoadingScreen.classList.add("--is-none");
+                  }, 350);
+                });
+              }
+            })
+
+            socket.on('disconnect', function () {
+              socket.close()
+            })
+          })()
+        </script>
+        <% } %>
+</body>
+
+</html>
