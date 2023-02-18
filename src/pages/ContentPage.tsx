@@ -62,7 +62,7 @@ export default function ContentPage() {
 
 					<Link
 						to={generatePath('/:slugs/comment', {
-							slugs: route.params.id as string,
+							slugs: route.params.slugs as string,
 						})}
 					>
 						{`> View Comment`}

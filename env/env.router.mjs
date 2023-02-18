@@ -5,7 +5,7 @@ export default {
 			path: '/',
 		},
 		home: {
-			path: '',
+			path: '/',
 		},
 		content: {
 			path: ':slugs',

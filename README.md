@@ -363,6 +363,10 @@ I handled for you executing **protect()** in this project, so you just only focu
 // router/index
 
 // Init RouterProtection with WAITING_VERIFY_ROUTER_ID_LIST
+const WAITING_VERIFY_ROUTER_ID_LIST: { [key: string]: Array<string> } = {
+  [import.meta.env.ROUTER_COMMENT_ID]: [import.meta.env.ROUTER_LOGIN_ID],
+}
+
 {
   path: import.meta.env.ROUTER_BASE_PATH,
   element: (
@@ -493,7 +497,3 @@ Finish him! Easy to finish the extensibility requirement, jsut only 1 line of co
 
 1. **config/router/utils/RouterProtection.ts** to customize or implement logic.
 2. **config/router/index.ts** to init your handler.
-
-```
-
-```
