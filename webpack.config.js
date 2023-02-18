@@ -157,6 +157,9 @@ module.exports = async (env, arg) => {
 						],
 					},
 					{
+						'config/router/context/InfoContext': ['useRoute'],
+					},
+					{
 						'styled-components': [
 							['default', 'styled'],
 							'createGlobalStyle',

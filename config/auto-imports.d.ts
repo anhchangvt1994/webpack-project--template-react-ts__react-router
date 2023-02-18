@@ -49,6 +49,7 @@ declare global {
 	const useReducer: typeof import('react')['useReducer']
 	const useRef: typeof import('react')['useRef']
 	const useResolvedPath: typeof import('react-router-dom')['useResolvedPath']
+	const useRoute: typeof import('config/router/context/InfoContext')['useRoute']
 	const useRoutes: typeof import('react-router-dom')['useRoutes']
 	const useSearchParams: typeof import('react-router-dom')['useSearchParams']
 	const useState: typeof import('react')['useState']

@@ -48,6 +48,7 @@
     "useReducer": true,
     "useRef": true,
     "useResolvedPath": true,
+    "useRoute": true,
     "useRoutes": true,
     "useSearchParams": true,
     "useState": true,

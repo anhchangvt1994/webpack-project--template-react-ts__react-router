@@ -427,11 +427,73 @@ I handled for you executing **protect()** in this project, so you just only focu
 }, // Login Page
 ```
 
+OK! You finish config protection for router, next I will show you how to use it
+
+Imagine that you go to Comment Page without login, and the system redirect you to Login Page. This requirement are resolved by the above configuration.
+In next step, in Login Page you click to login and after that the system has to redirect you go back Comment Page. This requirement are also resolved by the above configuration, but you must re-run the **protect()** in Login Page after login successfully. To do that, I have handled it and gave you a useful in API composition **useRoute** called **reProtect()**, all you need to do is just use it. See code below.
+
+```javascript
+// LoginPage.tsx
+import { useUserInfo } from 'context/UserInfoContext'
+
+const route = useRoute()
+const { userInfo, setUserState } = useUserInfo()
+
+const onClickLogin = () => {
+	setUserState({ ...userInfo, email: 'abc@gmail.com' })
+
+	// NOTE - remember use Optional chaining "?.". Thanks to ES6 useful
+	// Because the system don't know what routes have protect and what routes don't have
+	route.handle.reProtect?.()
+}
+```
+
+And finish! You finish the requirement about login success with just 1 line of code.
+But! wait minutes! We have an extensibility requirement
+
+```markdown
+// Logout rules
+After login successfully
+The "user's email" and "Logout" label will display in header at right corner
+
+If user click "Logout" label
+
+1. The system will logout account.
+2. Next the system will check protect of current route.
+3. If current route does not have protect rule or protect rule is valid,
+   then do nothing.
+4. If protect of current route return invalid,
+   the system will redirect user to the verify route.
+```
+
+I think you have already known what need to do. Correct! just use **reProtect()** after logout. See code below.
+
+```javascript
+// Layout.tsx
+import { useUserInfo } from 'context/UserInfoContext'
+
+const route = useRoute()
+const { userState, setUserState } = useUserInfo()
+
+const onClickLogout = () => {
+	setUserState({ ...userState, email: '' })
+
+	// NOTE - remember use Optional chaining "?.". Thanks to ES6 useful
+	// Because the system don't know what routes have protect and what routes don't have
+	route.handle.reProtect?.()
+}
+```
+
+Finish him! Easy to finish the extensibility requirement, jsut only 1 line of code.
+
 **NOTE**
 
 - Makesure your protect function is a **Pure Function**, it make your result will always right.
 - You can customize or implement your logic to handle protect case by using
 
-1. **shim-vue.d.ts** to declare type for **meta field**
-2. **config/router/utils/BeforeEachHandler.ts** to customize or implement logic.
-3. **config/router/index.ts** to init your handler.
+1. **config/router/utils/RouterProtection.ts** to customize or implement logic.
+2. **config/router/index.ts** to init your handler.
+
+```
+
+```

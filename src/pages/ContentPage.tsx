@@ -1,6 +1,5 @@
 import ModuleContentSection from 'components/content-page/ModuleContentSection'
 import CommentSection from 'components/comment-page/CommentSection'
-import { useParamsAdvance, useRoute } from 'config/router/context/InfoContext'
 import { generatePath } from 'react-router-dom'
 
 // NOTE - Dummy Data Region
@@ -40,18 +39,20 @@ const Page = styled.div``
 // NOTE - End Styled Components Region
 
 export default function ContentPage() {
-	const { slugs, id } = useParamsAdvance()
+	// const { slugs, id } = useParamsAdvance()
 	const route = useRoute()
 
 	const data: {
 		title: string
 		content: string
-	} = response[id as string]
+	} = response[route.params.id as string]
 
 	return (
 		<Page>
 			<div>
-				<Link to={`/`}>{'< Back to HomePage'}</Link>
+				<Link to={import.meta.env.ROUTER_HOME_PATH}>
+					{'< Back to HomePage'}
+				</Link>
 			</div>
 			{route?.id !== import.meta.env.ROUTER_COMMENT_ID ? (
 				<>
@@ -61,7 +62,7 @@ export default function ContentPage() {
 
 					<Link
 						to={generatePath('/:slugs/comment', {
-							slugs: slugs as string,
+							slugs: route.params.id as string,
 						})}
 					>
 						{`> View Comment`}

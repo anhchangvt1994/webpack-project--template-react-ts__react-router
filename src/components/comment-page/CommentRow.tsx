@@ -1,4 +1,3 @@
-import { useRoute } from 'config/router/context/InfoContext'
 import ImageItem, { Outer as ImageOuter } from 'components/ImageItem'
 import { Suspender } from 'utils/Suspender'
 

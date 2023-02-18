@@ -3,7 +3,6 @@ import LoadingBoundary from 'utils/LoadingBoundary'
 import LoadingPageComponent from 'components/LoadingPageComponent'
 import ErrorLoadingPageComponent from 'components/ErrorPageComponent'
 import { useUserInfo } from 'context/UserInfoContext'
-import { useRoute } from 'config/router/context/InfoContext'
 
 const MainContainer = styled.div`
 	max-width: 1280px;
@@ -22,10 +21,10 @@ const Header = styled.header`
 function Layout() {
 	const location = useLocation()
 	const route = useRoute()
-	const { userState, setUserInfo } = useUserInfo()
+	const { userState, setUserState } = useUserInfo()
 
 	const onClickLogout = () => {
-		setUserInfo({ ...userState, email: '' })
+		setUserState({ ...userState, email: '' })
 		route.handle.reProtect?.()
 	}
 

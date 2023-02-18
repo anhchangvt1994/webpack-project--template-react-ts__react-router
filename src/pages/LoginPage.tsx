@@ -1,4 +1,3 @@
-import { useRoute } from 'config/router/context/InfoContext'
 import { useUserInfo } from 'context/UserInfoContext'
 import ImageItem, { Outer as ImageOuter } from 'components/ImageItem'
 
@@ -40,17 +39,19 @@ const Button = styled.button`
 
 export default function LoginPage() {
 	const route = useRoute()
-	const { userInfo, setUserInfo } = useUserInfo()
+	const { userInfo, setUserState } = useUserInfo()
 
 	const onClickLogin = () => {
-		setUserInfo({ ...userInfo, email: 'abc@gmail.com' })
+		setUserState({ ...userInfo, email: 'abc@gmail.com' })
 		route.handle.reProtect?.()
 	}
 
 	return (
 		<Page>
 			<div>
-				<Link to={`/`}>{'< Back to HomePage'}</Link>
+				<Link to={import.meta.env.ROUTER_HOME_PATH}>
+					{'< Back to HomePage'}
+				</Link>
 			</div>
 			<Section>
 				<Block>

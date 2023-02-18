@@ -1,4 +1,3 @@
-import { useRoute } from 'config/router/context/InfoContext'
 import LoadingBoundary from 'utils/LoadingBoundary'
 import CommentLoader from 'components/comment-page/CommentLoader'
 

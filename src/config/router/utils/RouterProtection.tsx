@@ -3,7 +3,7 @@ import type { To } from 'react-router'
 import type { INavigateInfo } from 'config/router/context/InfoContext'
 import type { IValidation } from 'config/router/context/ValidationContext'
 import { useUserInfo } from 'context/UserInfoContext'
-import { useRoute, useNavigateInfo } from 'config/router/context/InfoContext'
+import { useNavigateInfo } from 'config/router/context/InfoContext'
 
 export interface ICertInfo {
 	user: IUserInfo
