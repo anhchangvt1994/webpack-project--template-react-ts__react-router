@@ -1,18 +1,19 @@
-import type { RouteObject } from 'react-router-dom'
 import Layout from 'Layout'
 import NotFoundPage from 'pages/NotFoundPage'
-import RouterInit from './utils/RouterInit'
-import RouterValidation from './utils/RouterValidation'
-import RouterProtection from './utils/RouterProtection'
-import RouterDeliver from './utils/RouterDeliver'
+import { RouteObject } from 'react-router-dom'
+import { RouteObjectCustomize } from 'static'
 import { withLazy } from './utils/LazyComponentHandler'
+import RouterDeliver from './utils/RouterDeliver'
+import RouterInit from './utils/RouterInit'
+import RouterProtection from './utils/RouterProtection'
+import RouterValidation from './utils/RouterValidation'
 
 const WAITING_VERIFY_ROUTER_ID_LIST: { [key: string]: Array<string> } = {
 	[import.meta.env.ROUTER_COMMENT_ID]: [import.meta.env.ROUTER_LOGIN_ID],
 }
 
 // NOTE - Router Configuration
-const routes: RouteObject[] = [
+const routes: RouteObjectCustomize[] = [
 	{
 		path: import.meta.env.ROUTER_BASE_PATH,
 		element: (
@@ -107,7 +108,7 @@ const routes: RouteObject[] = [
 	},
 ]
 
-const router = createBrowserRouter(routes, {
+const router = createBrowserRouter(routes as RouteObject[], {
 	basename: '/',
 })
 
