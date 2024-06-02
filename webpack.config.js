@@ -157,7 +157,27 @@ module.exports = async (env, arg) => {
 						],
 					},
 					{
-						'config/router/context/InfoContext': ['useRoute'],
+						'app/router/context/InfoContext': ['useRoute'],
+						'utils/StringHelper.ts': [
+							'getSlug',
+							'getSlugWithoutDash',
+							'getUnsignedLetters',
+							'getCustomSlug',
+							'generateTitleCase',
+							'generateSentenceCase',
+							'getLocale',
+							'encode',
+							'decode',
+							'hashCode',
+						],
+						'hooks/useStringHelper.ts': [
+							'useSlug',
+							'useSlugWithoutDash',
+							'useUnsignedLetters',
+							'useTitleCase',
+							'useSentenceCase',
+						],
+						'utils/CookieHelper.ts': ['getCookie', 'setCookie', 'deleteCookie'],
 					},
 					{
 						'styled-components': [
@@ -180,6 +200,7 @@ module.exports = async (env, arg) => {
 		],
 		stats: WebpackConfigWithMode.stats || 'detailed',
 		cache: WebpackConfigWithMode.cache || true,
+		performance: WebpackConfigWithMode.performance || {},
 		optimization: WebpackConfigWithMode.optimization || {},
 		experiments: WebpackConfigWithMode.experiments || {},
 		target: WebpackConfigWithMode.target || 'web',

@@ -55,7 +55,7 @@ module.exports = (async () => {
 								'@babel/preset-typescript',
 							],
 							plugins: [
-								['@babel/plugin-proposal-class-properties', { loose: false }],
+								['@babel/plugin-transform-class-properties', { loose: false }],
 							],
 						},
 					},
@@ -64,7 +64,9 @@ module.exports = (async () => {
 		},
 		plugins: [
 			new PurgeCSSPlugin({
-				paths: glob.sync(`./src/**/*`, { nodir: true }),
+				paths: ['./index.production.html'].concat(
+					glob.sync(`./src/**/*`, { nodir: true })
+				),
 			}),
 			new HtmlWebpackPlugin({
 				title: 'webpack project for react',
@@ -105,6 +107,7 @@ module.exports = (async () => {
 		performance: {
 			maxEntrypointSize: 512000,
 			maxAssetSize: 512000,
+			hints: false,
 		},
 		optimization: {
 			moduleIds: 'deterministic',
@@ -139,17 +142,25 @@ module.exports = (async () => {
 						minSize: 10000,
 						maxSize: 100000,
 					},
-					config: {
+					app: {
 						chunks: 'all',
-						test: /[\\/]config[\\/]/,
+						test: /[\\/]app[\\/]/,
 						filename: '[chunkhash:8].js',
 						reuseExistingChunk: true,
 						minSize: 10000,
 						maxSize: 100000,
 					},
-					context: {
+					store: {
 						chunks: 'all',
-						test: /[\\/]context[\\/]/,
+						test: /[\\/]store[\\/]/,
+						filename: '[chunkhash:8].js',
+						reuseExistingChunk: true,
+						minSize: 10000,
+						maxSize: 100000,
+					},
+					hooks: {
+						chunks: 'all',
+						test: /[\\/]hooks[\\/]/,
 						filename: '[chunkhash:8].js',
 						reuseExistingChunk: true,
 						minSize: 10000,
@@ -167,7 +178,7 @@ module.exports = (async () => {
 							comments: false, // It will drop all the console.log statements from the final production build
 						},
 						compress: {
-							drop_console: true, // It will stop showing any console.log statement in dev tools. Make it false if you want to see consoles in production mode.
+							// drop_console: true, // It will stop showing any console.log statement in dev tools. Make it false if you want to see consoles in production mode.
 						},
 					},
 					extractComments: false,

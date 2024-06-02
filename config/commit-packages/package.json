@@ -1,0 +1,16 @@
+{
+	"name": "commit-packages",
+	"version": "1.0.0",
+	"description": "commit-packages",
+	"main": "",
+	"scripts": {},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@commitlint/config-conventional": "^17.6.6",
+		"commitizen": "^4.3.0",
+		"commitlint": "^17.6.6",
+		"cz-git": "^1.6.1",
+		"husky": "^8.0.3"
+	}
+}

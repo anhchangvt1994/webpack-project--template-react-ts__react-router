@@ -7,9 +7,13 @@ const Section = styled.section`
 
 export default function CommentSection({ children }) {
 	const { id } = useRoute()
+
 	return (
 		<Section>
-			<LoadingBoundary key={id} fallback={<CommentLoader amount={3} />}>
+			<LoadingBoundary
+				// key={id}
+				fallback={<CommentLoader amount={3} />}
+			>
 				{children}
 			</LoadingBoundary>
 		</Section>

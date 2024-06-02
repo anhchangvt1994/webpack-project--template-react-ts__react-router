@@ -7,6 +7,7 @@ import RouterDeliver from './utils/RouterDeliver'
 import RouterInit from './utils/RouterInit'
 import RouterProtection from './utils/RouterProtection'
 import RouterValidation from './utils/RouterValidation'
+import { LoadingInfoProvider } from './context/LoadingInfoContext'
 
 const WAITING_VERIFY_ROUTER_ID_LIST: { [key: string]: Array<string> } = {
 	[import.meta.env.ROUTER_COMMENT_ID]: [import.meta.env.ROUTER_LOGIN_ID],
@@ -17,17 +18,19 @@ const routes: RouteObjectCustomize[] = [
 	{
 		path: import.meta.env.ROUTER_BASE_PATH,
 		element: (
-			<RouterInit>
-				<RouterValidation NotFoundPage>
-					<RouterDeliver>
-						<RouterProtection
-							WatingVerifyRouterIDList={WAITING_VERIFY_ROUTER_ID_LIST}
-						>
-							<Layout />
-						</RouterProtection>
-					</RouterDeliver>
-				</RouterValidation>
-			</RouterInit>
+			<LoadingInfoProvider>
+				<RouterInit>
+					<RouterValidation NotFoundPage={NotFoundPage}>
+						<RouterDeliver>
+							<RouterProtection
+								WatingVerifyRouterIDList={WAITING_VERIFY_ROUTER_ID_LIST}
+							>
+								<Layout />
+							</RouterProtection>
+						</RouterDeliver>
+					</RouterValidation>
+				</RouterInit>
+			</LoadingInfoProvider>
 		),
 		children: [
 			{
