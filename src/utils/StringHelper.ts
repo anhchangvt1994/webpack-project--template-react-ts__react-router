@@ -441,16 +441,6 @@ const generateSentenceCase = (title) => {
 
 const getCustomSlug = _generateSlug
 
-const getLocale = (lang?: string, country?: string) => {
-	const arrLocale: string[] = []
-
-	if (lang && LocaleInfo.langSelected) arrLocale.push(lang)
-	if (country && LocaleInfo.countrySelected)
-		arrLocale.push(country.toLowerCase())
-
-	return arrLocale.join('-')
-} // getLocale
-
 const encode = (input) => {
 	const chars =
 		'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
@@ -524,7 +514,6 @@ export {
 	getCustomSlug,
 	generateTitleCase,
 	generateSentenceCase,
-	getLocale,
 	encode,
 	decode,
 	hashCode,

@@ -144,6 +144,18 @@ module.exports = async (env, arg) => {
 						],
 					},
 					{
+						from: 'react',
+						imports: [
+							'Dispatch',
+							'SetStateAction',
+							'HTMLProps',
+							'HTMLAttributes',
+							'ComponentType',
+							'ReactNode',
+						],
+						type: true,
+					},
+					{
 						'react-dom/client': ['createRoot'],
 					},
 					'react-router-dom',
